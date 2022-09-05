@@ -7,7 +7,7 @@ interface IInput {
   name: string;
   type: string;
   onChange: () => void;
-  onBlur: () => void;
+  onBlur?: () => void;
   placeholder?: string;
 }
 
@@ -16,7 +16,9 @@ const Input: React.FC<IInput> = (props) => {
     <input
       id={props.id}
       type={props.type}
-      className={`h-10 w-full rounded-lg px-8 placeholder:text-blue`}
+      className={`h-10 w-full rounded-lg px-8 placeholder:text-blue ${
+        props.className || ""
+      }`}
       name={props.name}
       value={props.value}
       onChange={props.onChange}

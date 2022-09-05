@@ -8,7 +8,7 @@ const CreateEmployeeForm: React.FC = () => {
   const handleChange = () => {};
   return (
     <form className="max-w-[1110px] px-8 mt-20 mx-auto grid grid-cols-2 gap-8">
-      <div className="bg-blue w-full h-96 p-8">
+      <div className="bg-blue w-full h-auto p-8">
         <InputValidator>
           <Label htmlFor="firstName">
             FirstName
@@ -62,7 +62,8 @@ const CreateEmployeeForm: React.FC = () => {
           </Label>
         </InputValidator>
       </div>
-      <div className="bg-blue w-full h-96 p-8">
+      <div className="bg-blue w-full h-auto p-8">
+        <h2 className="text-white font-bold uppercase text-2xl">Address</h2>
         <InputValidator>
           <Label htmlFor="street">
             Street
