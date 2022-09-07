@@ -15,7 +15,6 @@ interface IEmployee {
 }
 
 const Employee: React.FC<IEmployee> = (props) => {
-  console.log("props", props);
   return (
     <div className="odd:bg-grey even:bg-light-grey grid grid-cols-9 h-10 py-1.5 text-center">
       <span>{props.employee.firstName}</span>

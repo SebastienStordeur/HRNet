@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Employee from "./Employee";
 
-type Employee = {
+type Employe = {
   firstName: string;
   lastName: string;
   dateOfBirth: string;
@@ -14,13 +14,13 @@ type Employee = {
 };
 
 const EmployeesList: React.FC = () => {
-  const [employees, setEmployees] = useState<Employee[] | any>([]);
+  const [employees, setEmployees] = useState<Employe[] | any>([]);
 
   const storedEmployees = localStorage.getItem("employees");
 
   useEffect(() => {
     if (typeof storedEmployees === "string") {
-      let localEmployees: Employee | null;
+      let localEmployees: Employe | null;
       localEmployees = JSON.parse(storedEmployees);
       setEmployees(localEmployees);
     }
@@ -40,7 +40,7 @@ const EmployeesList: React.FC = () => {
         <span>Zip Code</span>
       </div>
       <div>
-        {employees.slice(0, 10).map((employee: Employee) => {
+        {employees.slice(0, 10).map((employee: Employe) => {
           return (
             <Employee key={Math.random().toString()} employee={employee} />
           );
