@@ -28,24 +28,29 @@ const EmployeesList: React.FC = () => {
 
   return (
     <section id="employee-list" className="max-w-[1110px] mx-auto mt-5 ">
-      <div className="grid grid-cols-9 text-white bg-blue h-10 font-medium text-center py-1.5">
-        <span>First Name</span>
-        <span>Last Name</span>
-        <span>Start Date</span>
-        <span>Department</span>
-        <span>Date of Birth</span>
-        <span>Street</span>
-        <span>City</span>
-        <span>State</span>
-        <span>Zip Code</span>
-      </div>
-      <div>
-        {employees.slice(0, 10).map((employee: Employe) => {
-          return (
-            <Employee key={Math.random().toString()} employee={employee} />
-          );
-        })}
-      </div>
+      <table className="grid grid-cols-9 text-white bg-blue h-10 font-medium text-center py-1.5">
+        <thead>
+          <tr>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Start Date</th>
+            <th>Department</th>
+            <th>Date of Birth</th>
+            <th>Street</th>
+            <th>City</th>
+            <th>State</th>
+            <th>Zip Code</th>
+          </tr>
+        </thead>
+        <tbody>
+          {employees.slice(0, 1).map((employee: Employe) => {
+            return (
+              <Employee key={Math.random().toString()} employee={employee} />
+            );
+          })}
+        </tbody>
+      </table>
+      <div></div>
       <div className="flex justify-between">
         <p>Showing X of X</p>
         <div>

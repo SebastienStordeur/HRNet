@@ -16,17 +16,17 @@ interface IEmployee {
 
 const Employee: React.FC<IEmployee> = (props) => {
   return (
-    <div className="odd:bg-grey even:bg-light-grey grid grid-cols-9 h-10 py-1.5 text-center">
-      <span>{props.employee.firstName}</span>
-      <span>{props.employee.lastName}</span>
-      <span>{props.employee.startDate}</span>
-      <span>{props.employee.department}</span>
-      <span>{props.employee.dateOfBirth}</span>
-      <span>{props.employee.street}</span>
-      <span>{props.employee.city}</span>
-      <span>{props.employee.state}</span>
-      <span>{props.employee.zipCode}</span>
-    </div>
+    <td className="odd:bg-grey even:bg-light-grey w-full grid grid-cols-9 h-10 py-1.5 text-center">
+      <td>{props.employee.firstName}</td>
+      <td>{props.employee.lastName}</td>
+      <td>{props.employee.startDate}</td>
+      <td>{props.employee.department}</td>
+      <td>{props.employee.dateOfBirth}</td>
+      <td>{props.employee.street}</td>
+      <td>{props.employee.city}</td>
+      <td>{props.employee.state}</td>
+      <td>{props.employee.zipCode}</td>
+    </td>
   );
 };
 
