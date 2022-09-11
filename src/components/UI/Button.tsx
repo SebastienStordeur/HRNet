@@ -3,13 +3,16 @@ import React from "react";
 interface IButton {
   children: React.ReactNode;
   type?: React.ButtonHTMLAttributes<HTMLButtonElement>["type"];
+  className?: string;
+  onClick?: () => void;
 }
 
 const Button: React.FC<IButton> = (props) => {
   return (
     <button
-      className="bg-green w-3/6 h-12 absolute left-[77%] text-white font-bold rounded-lg"
+      className={`bg-blue h-10 px-4 text-white font-bold rounded-lg ${props.className || ""}`}
       type={props.type || "button"}
+      onClick={props.onClick}
     >
       {props.children}
     </button>

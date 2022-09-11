@@ -28,9 +28,9 @@ const EmployeesList: React.FC = () => {
 
   return (
     <section id="employee-list" className="max-w-[1110px] mx-auto mt-5 ">
-      <table className="grid grid-cols-9 text-white bg-blue h-10 font-medium text-center py-1.5">
+      <table className="w-full">
         <thead>
-          <tr>
+          <tr className="grid grid-cols-9 text-white w-full bg-blue h-10 font-medium text-center py-1.5">
             <th>First Name</th>
             <th>Last Name</th>
             <th>Start Date</th>
@@ -42,8 +42,8 @@ const EmployeesList: React.FC = () => {
             <th>Zip Code</th>
           </tr>
         </thead>
-        <tbody>
-          {employees.slice(0, 1).map((employee: Employe) => {
+        <tbody className="w-full mt-10">
+          {employees.slice(0, 10).map((employee: Employe) => {
             return (
               <Employee key={Math.random().toString()} employee={employee} />
             );
