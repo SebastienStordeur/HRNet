@@ -7,14 +7,18 @@ import Label from "./Label";
 
 const CreateEmployeeForm: React.FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const handleChange: () => void = () => {
+
+  const showModalHandler = () => {
     setShowModal((prevValue) => !prevValue);
   };
+
+  const handleChange: () => void = () => {};
 
   const submitHandler: (event: React.FormEvent<HTMLFormElement>) => void = (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+    setShowModal((prevValue) => !prevValue);
   };
 
   return (
@@ -80,10 +84,10 @@ const CreateEmployeeForm: React.FC = () => {
           </InputValidator>
         </div>
         <div className="relative">
-          <Button>Save</Button>
+          <Button type="submit">Save</Button>
         </div>
       </form>
-      {showModal && <Modal onClick={handleChange} />}
+      {showModal && <Modal onClick={showModalHandler} />}
     </React.Fragment>
   );
 };
