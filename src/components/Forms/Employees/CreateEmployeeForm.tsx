@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import Modal from "../../Modal/Modal";
+import Select from "../../Select/Select";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
 import InputValidator from "../Inputvalidator/InputValidator";
 import Label from "./Label";
 
 const CreateEmployeeForm: React.FC = () => {
+  const departments = ["Sales", "Marketing", "Engineering", "Human Resources", "Legal"];
+
   const [showModal, setShowModal] = useState<boolean>(false);
 
   const showModalHandler = () => {
@@ -73,13 +76,19 @@ const CreateEmployeeForm: React.FC = () => {
           <InputValidator>
             <Label htmlFor="state">
               State
-              <Input id="state" name="state" type="date" value="" onChange={handleChange} onBlur={handleChange} />
+              <Select></Select>
             </Label>
           </InputValidator>
           <InputValidator>
             <Label htmlFor="zip">
               Zip Code
               <Input id="zip" name="zip" type="number" value="" onChange={handleChange} onBlur={handleChange} />
+            </Label>
+          </InputValidator>
+          <InputValidator>
+            <Label htmlFor="department">
+              Department
+              <Select data={departments}></Select>
             </Label>
           </InputValidator>
         </div>
