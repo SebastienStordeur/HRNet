@@ -6,20 +6,19 @@ import Sorter from "../components/List/Sorter";
 
 const Employees: React.FC = () => {
   const [searchValue, setSearchValue] = useState<string>("");
-  console.log(searchValue);
+
   const stored = localStorage.getItem("employees");
-  let data: any;
+
   useEffect(() => {
     if (typeof stored === "string") {
-      data = JSON.parse(stored);
+      const data = JSON.parse(stored);
+      console.log(data);
+      const filteredData = data.filter((employee: any) =>
+        employee.firstName.toLowerCase().includes(searchValue.toLowerCase())
+      );
+      console.log(filteredData);
     }
   }, [stored, searchValue]);
-
-  /*   if (data !== null) {
-    console.log(
-      data.filter((employee: any) => employee.firstname.includes(searchValue))
-    );
-  } */
 
   return (
     <Main>
