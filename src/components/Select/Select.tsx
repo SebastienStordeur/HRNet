@@ -18,10 +18,15 @@ const Select: React.FC<ISelect> = (props) => {
   };
 
   return (
-    <div id="select-wrapper" className="bg-white text-blue">
+    <div
+      id="select-wrapper"
+      className="bg-white text-blue rounded font-semibold cursor-pointer relative"
+    >
       <div>
-        <label htmlFor="department">{activeValue ? activeValue : "Department"}</label>
-        <ul className="h-10" onClick={openMenuHandler}>
+        <ul className="h-8 py-1 px-4" onClick={openMenuHandler}>
+          <label htmlFor="department">
+            {activeValue ? activeValue : "Department"}
+          </label>
           {isMenuOpen &&
             props.data?.map((value) => {
               return (

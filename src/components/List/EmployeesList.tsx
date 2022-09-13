@@ -14,24 +14,40 @@ type Employe = {
 };
 
 const EmployeesList: React.FC = () => {
-  const [employees, setEmployees] = useState<Employe[] | any>([]);
+  const [employees, setEmployees] = useState<Employe[]>([]);
 
   const storedEmployees = localStorage.getItem("employees");
 
   useEffect(() => {
     if (typeof storedEmployees === "string") {
-      let localEmployees: Employe | null;
-      localEmployees = JSON.parse(storedEmployees);
-      setEmployees(localEmployees);
+      setEmployees(JSON.parse(storedEmployees));
     }
   }, [storedEmployees]);
+
+  const sortAlphabetically = () => {
+    setEmployees(
+      employees.sort((a: any, b: any) => {
+        return a.firstName > b.firstName ? 1 : -1;
+      })
+    );
+    console.log(employees);
+  };
+
+  const sortNumbers = () => {
+    setEmployees(
+      employees.sort((a: any, b: any) => {
+        return a.zipCode - b.zipCode;
+      })
+    );
+    console.log(employees);
+  };
 
   return (
     <section id="employee-list" className="max-w-[1110px] mx-auto mt-5 ">
       <table className="w-full">
         <thead>
           <tr className="grid grid-cols-9 text-white w-full bg-blue h-10 font-medium text-center py-1.5">
-            <th>First Name</th>
+            <th onClick={sortAlphabetically}>First Name</th>
             <th>Last Name</th>
             <th>Start Date</th>
             <th>Department</th>
@@ -39,11 +55,11 @@ const EmployeesList: React.FC = () => {
             <th>Street</th>
             <th>City</th>
             <th>State</th>
-            <th>Zip Code</th>
+            <th onClick={sortNumbers}>Zip Code</th>
           </tr>
         </thead>
         <tbody className="w-full mt-10">
-          {employees.slice(0, 10).map((employee: Employe) => {
+          {employees.map((employee: Employe) => {
             return (
               <Employee key={Math.random().toString()} employee={employee} />
             );
