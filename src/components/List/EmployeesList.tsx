@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Employee from "./Employee";
 
 type Employe = {
@@ -13,33 +13,52 @@ type Employe = {
   zipCode: string;
 };
 
-const EmployeesList: React.FC = () => {
-  const [employees, setEmployees] = useState<Employe[]>([]);
+interface IEmployee {
+  employees: {
+    firstName: string;
+    lastName: string;
+    dateOfBirth: string;
+    startDate: string;
+    department: string;
+    street: string;
+    city: string;
+    state: string;
+    zipCode: string;
+  }[];
+}
 
-  const storedEmployees = localStorage.getItem("employees");
-
-  useEffect(() => {
-    if (typeof storedEmployees === "string") {
-      setEmployees(JSON.parse(storedEmployees));
-    }
-  }, [storedEmployees]);
+const EmployeesList: React.FC<IEmployee> = (props) => {
+  console.log("psops", props.employees);
+  const [isSorted, setIsSorted] = useState<boolean>(false);
+  const [sortedEmployees, setSortedEmployees] = useState<Employe[]>(props.employees);
 
   const sortAlphabetically = () => {
-    setEmployees(
-      employees.sort((a: any, b: any) => {
-        return a.firstName > b.firstName ? 1 : -1;
-      })
-    );
-    console.log(employees);
+    if (!isSorted) {
+      setSortedEmployees(
+        props.employees.sort((a: any, b: any) => {
+          return a.firstName > b.firstName ? 1 : -1;
+        })
+      );
+      setIsSorted(true);
+    } else {
+      setSortedEmployees(
+        props.employees.sort((a: any, b: any) => {
+          return a.firstName > b.firstName ? -1 : 1;
+        })
+      );
+      setIsSorted(false);
+    }
+
+    console.log(sortedEmployees);
   };
 
   const sortNumbers = () => {
-    setEmployees(
-      employees.sort((a: any, b: any) => {
+    setSortedEmployees(
+      props.employees.sort((a: any, b: any) => {
         return a.zipCode - b.zipCode;
       })
     );
-    console.log(employees);
+    console.log(sortedEmployees);
   };
 
   return (
@@ -59,10 +78,8 @@ const EmployeesList: React.FC = () => {
           </tr>
         </thead>
         <tbody className="w-full mt-10">
-          {employees.map((employee: Employe) => {
-            return (
-              <Employee key={Math.random().toString()} employee={employee} />
-            );
+          {props.employees.map((employee: Employe) => {
+            return <Employee key={Math.random().toString()} employee={employee} />;
           })}
         </tbody>
       </table>
