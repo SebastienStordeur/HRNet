@@ -32,10 +32,10 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
   const [sortedEmployees, setSortedEmployees] = useState<Employe[]>(props.employees);
 
   const sortAlphabetically = (value: string) => {
+    console.log(value);
     if (!isSorted) {
       setSortedEmployees(
         props.employees.sort((a: any, b: any) => {
-          /* console.log(a); */
           return a[value] > b[value] ? 1 : -1;
         })
       );
@@ -95,7 +95,7 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
       </table>
       <div></div>
       <div className="flex justify-between">
-        <p>Showing X of X</p>
+        <p>Showing X of {props.employees.length}</p>
         <div>
           <button>Previous</button>
           <span className="mx-4">1</span>

@@ -7,6 +7,9 @@ import Sorter from "../components/List/Sorter";
 const Employees: React.FC = () => {
   const [employees, setEmployees] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
+  const [numberPerPage, setNumberPerPage] = useState<string>("0");
+
+  console.log(numberPerPage);
 
   const stored = localStorage.getItem("employees");
 
@@ -22,6 +25,10 @@ const Employees: React.FC = () => {
     }
   }, [stored, searchValue]);
 
+  useEffect(() => {
+    console.log(numberPerPage);
+  }, [numberPerPage]);
+
   console.log(employees);
 
   return (
@@ -30,7 +37,7 @@ const Employees: React.FC = () => {
       <div className="flex justify-between w-full max-w-[1110px] mx-auto mt-8">
         <div>
           Show
-          <Sorter />
+          <Sorter setValue={setNumberPerPage} />
           entries
         </div>
         <Search value={searchValue} setValue={setSearchValue} />
