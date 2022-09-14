@@ -28,22 +28,41 @@ interface IEmployee {
 }
 
 const EmployeesList: React.FC<IEmployee> = (props) => {
-  console.log("psops", props.employees);
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [sortedEmployees, setSortedEmployees] = useState<Employe[]>(props.employees);
 
-  const sortAlphabetically = () => {
+  const sortAlphabetically = (value: string) => {
     if (!isSorted) {
       setSortedEmployees(
         props.employees.sort((a: any, b: any) => {
-          return a.firstName > b.firstName ? 1 : -1;
+          /* console.log(a); */
+          return a[value] > b[value] ? 1 : -1;
         })
       );
       setIsSorted(true);
     } else {
       setSortedEmployees(
         props.employees.sort((a: any, b: any) => {
-          return a.firstName > b.firstName ? -1 : 1;
+          return a[value] > b[value] ? -1 : 1;
+        })
+      );
+      setIsSorted(false);
+    }
+    console.log(sortedEmployees);
+  };
+
+  const sortNumbers = () => {
+    if (!isSorted) {
+      setSortedEmployees(
+        props.employees.sort((a: any, b: any) => {
+          return a.zipCode - b.zipCode;
+        })
+      );
+      setIsSorted(true);
+    } else {
+      setSortedEmployees(
+        props.employees.sort((a: any, b: any) => {
+          return b.zipCode - a.zipCode;
         })
       );
       setIsSorted(false);
@@ -52,28 +71,19 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
     console.log(sortedEmployees);
   };
 
-  const sortNumbers = () => {
-    setSortedEmployees(
-      props.employees.sort((a: any, b: any) => {
-        return a.zipCode - b.zipCode;
-      })
-    );
-    console.log(sortedEmployees);
-  };
-
   return (
     <section id="employee-list" className="max-w-[1110px] mx-auto mt-5 ">
       <table className="w-full">
         <thead>
           <tr className="grid grid-cols-9 text-white w-full bg-blue h-10 font-medium text-center py-1.5">
-            <th onClick={sortAlphabetically}>First Name</th>
-            <th>Last Name</th>
+            <th onClick={() => sortAlphabetically("firstName")}>First Name</th>
+            <th onClick={() => sortAlphabetically("lastName")}>Last Name</th>
             <th>Start Date</th>
-            <th>Department</th>
+            <th onClick={() => sortAlphabetically("department")}>Department</th>
             <th>Date of Birth</th>
-            <th>Street</th>
-            <th>City</th>
-            <th>State</th>
+            <th onClick={() => sortAlphabetically("street")}>Street</th>
+            <th onClick={() => sortAlphabetically("city")}>City</th>
+            <th onClick={() => sortAlphabetically("state")}>State</th>
             <th onClick={sortNumbers}>Zip Code</th>
           </tr>
         </thead>
