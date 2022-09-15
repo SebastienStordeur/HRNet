@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Employee from "./Employee";
 
 type Employe = {
@@ -25,11 +25,18 @@ interface IEmployee {
     state: string;
     zipCode: string;
   }[];
+  numberPerPage: any;
 }
 
 const EmployeesList: React.FC<IEmployee> = (props) => {
+  console.log("nb / page", props.numberPerPage);
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [sortedEmployees, setSortedEmployees] = useState<Employe[]>(props.employees);
+  const [numberOfPages, setNumberOfPages] = useState<number>(1);
+
+  useEffect(() => {
+    setNumberOfPages(Math.ceil(props.employees.length / props.numberPerPage));
+  }, [props]);
 
   const sortAlphabetically = (value: string) => {
     console.log(value);
@@ -93,9 +100,10 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
           })}
         </tbody>
       </table>
-      <div></div>
       <div className="flex justify-between">
-        <p>Showing X of {props.employees.length}</p>
+        <p>
+          Showing {JSON.parse(props.numberPerPage) + 1} to X of {props.employees.length}
+        </p>
         <div>
           <button>Previous</button>
           <span className="mx-4">1</span>

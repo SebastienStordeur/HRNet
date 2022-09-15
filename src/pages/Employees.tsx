@@ -7,15 +7,12 @@ import Sorter from "../components/List/Sorter";
 const Employees: React.FC = () => {
   const [employees, setEmployees] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
-  const [numberPerPage, setNumberPerPage] = useState<string>("0");
-
-  console.log(numberPerPage);
-
-  const stored = localStorage.getItem("employees");
+  const [numberPerPage, setNumberPerPage] = useState<number>(1);
+  const storedEmployees = localStorage.getItem("employees");
 
   useEffect(() => {
-    if (typeof stored === "string") {
-      const data = JSON.parse(stored);
+    if (typeof storedEmployees === "string") {
+      const data = JSON.parse(storedEmployees);
       const filteredData = data.filter(
         (employee: any) =>
           employee.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
@@ -23,13 +20,7 @@ const Employees: React.FC = () => {
       );
       setEmployees(filteredData);
     }
-  }, [stored, searchValue]);
-
-  useEffect(() => {
-    console.log(numberPerPage);
-  }, [numberPerPage]);
-
-  console.log(employees);
+  }, [storedEmployees, searchValue]);
 
   return (
     <Main>
@@ -42,7 +33,7 @@ const Employees: React.FC = () => {
         </div>
         <Search value={searchValue} setValue={setSearchValue} />
       </div>
-      <EmployeesList employees={employees} />
+      <EmployeesList employees={employees} numberPerPage={numberPerPage} />
     </Main>
   );
 };
