@@ -31,13 +31,16 @@ interface IEmployee {
 const EmployeesList: React.FC<IEmployee> = (props) => {
   console.log("nb / page", props.numberPerPage);
   const [isSorted, setIsSorted] = useState<boolean>(false);
-  const [sortedEmployees, setSortedEmployees] = useState<Employe[]>(props.employees);
   const [numberOfPages, setNumberOfPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
     setNumberOfPages(Math.ceil(props.employees.length / props.numberPerPage));
   }, [props]);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [props.numberPerPage]);
 
   const nextPageHandler = () => {
     setCurrentPage((prevValue) => prevValue + 1);
@@ -48,43 +51,19 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
   };
 
   const sortAlphabetically = (value: string) => {
-    console.log(value);
-    if (!isSorted) {
-      setSortedEmployees(
-        props.employees.sort((a: any, b: any) => {
-          return a[value] > b[value] ? 1 : -1;
-        })
-      );
-      setIsSorted(true);
-    } else {
-      setSortedEmployees(
-        props.employees.sort((a: any, b: any) => {
-          return a[value] > b[value] ? -1 : 1;
-        })
-      );
-      setIsSorted(false);
-    }
-    console.log(sortedEmployees);
+    props.employees.sort((a: any, b: any) =>
+      isSorted ? (a[value] > b[value] ? -1 : 1) : a[value] > b[value] ? 1 : -1
+    );
+    setIsSorted((prevValue) => !prevValue);
   };
 
   const sortNumbers = () => {
-    if (!isSorted) {
-      setSortedEmployees(
-        props.employees.sort((a: any, b: any) => {
-          return a.zipCode - b.zipCode;
-        })
-      );
-      setIsSorted(true);
-    } else {
-      setSortedEmployees(
-        props.employees.sort((a: any, b: any) => {
-          return b.zipCode - a.zipCode;
-        })
-      );
-      setIsSorted(false);
-    }
+    props.employees.sort((a: any, b: any) => (isSorted ? b.zipCode - a.zipCode : a.zipCode - b.zipCode));
+    setIsSorted((prevValue) => !prevValue);
+  };
 
-    console.log(sortedEmployees);
+  const sortDates = (value: string) => {
+    console.log(value);
   };
 
   return (
@@ -94,9 +73,9 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
           <tr className="grid grid-cols-9 text-white w-full bg-blue h-10 font-medium text-center py-1.5">
             <th onClick={() => sortAlphabetically("firstName")}>First Name</th>
             <th onClick={() => sortAlphabetically("lastName")}>Last Name</th>
-            <th>Start Date</th>
+            <th onClick={() => sortDates("startDate")}>Start Date</th>
             <th onClick={() => sortAlphabetically("department")}>Department</th>
-            <th>Date of Birth</th>
+            <th onClick={() => sortDates("dateOfBirth")}>Date of Birth</th>
             <th onClick={() => sortAlphabetically("street")}>Street</th>
             <th onClick={() => sortAlphabetically("city")}>City</th>
             <th onClick={() => sortAlphabetically("state")}>State</th>
