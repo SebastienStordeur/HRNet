@@ -1,12 +1,10 @@
 import React, { Dispatch, SetStateAction } from "react";
 
 interface ISorter {
-  setValue: any;
+  setValue: Dispatch<SetStateAction<number>>;
 }
 
 const Sorter: React.FC<ISorter> = (props) => {
-  console.log(props);
-
   const changeEntriesHandler = (event: any) => {
     props.setValue(JSON.parse(event.target.value));
   };

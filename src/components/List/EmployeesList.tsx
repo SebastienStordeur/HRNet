@@ -33,10 +33,19 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [sortedEmployees, setSortedEmployees] = useState<Employe[]>(props.employees);
   const [numberOfPages, setNumberOfPages] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   useEffect(() => {
     setNumberOfPages(Math.ceil(props.employees.length / props.numberPerPage));
   }, [props]);
+
+  const nextPageHandler = () => {
+    setCurrentPage((prevValue) => prevValue + 1);
+  };
+
+  const previousPageHandler = () => {
+    setCurrentPage((prevValue) => prevValue - 1);
+  };
 
   const sortAlphabetically = (value: string) => {
     console.log(value);
@@ -95,19 +104,24 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
           </tr>
         </thead>
         <tbody className="w-full mt-10">
-          {props.employees.map((employee: Employe) => {
-            return <Employee key={Math.random().toString()} employee={employee} />;
-          })}
+          {props.employees
+            .slice(0 + props.numberPerPage * (currentPage - 1), props.numberPerPage * currentPage)
+            .map((employee: Employe) => {
+              return <Employee key={Math.random().toString()} employee={employee} />;
+            })}
         </tbody>
       </table>
       <div className="flex justify-between">
         <p>
-          Showing {JSON.parse(props.numberPerPage) + 1} to X of {props.employees.length}
+          Showing {1 + props.numberPerPage * (currentPage - 1)} to
+          {props.numberPerPage <= props.employees.length && <span>{props.numberPerPage * currentPage}</span>}
+          {props.numberPerPage > props.employees.length && <span>{props.employees.length}</span>}
+          of {props.employees.length}
         </p>
         <div>
-          <button>Previous</button>
-          <span className="mx-4">1</span>
-          <button>Next</button>
+          {currentPage - 1 !== 0 && <button onClick={previousPageHandler}>Previous</button>}
+          <span className="mx-4">{currentPage}</span>
+          {currentPage + 1 <= numberOfPages && <button onClick={nextPageHandler}>Next</button>}
         </div>
       </div>
     </section>
