@@ -3,7 +3,7 @@ import React from "react";
 interface IInput {
   id: string;
   className?: string;
-  value: string | number;
+  value: string;
   name: string;
   type: string;
   onChange: any /* () => void | ((event: React.ChangeEvent<HTMLInputElement>) => void) */;

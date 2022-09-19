@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import Option from "./Option";
 
 interface ISelect {
-  data?: string[];
+  data?: string[] | any;
+  headline: string | number;
 }
 
 const Select: React.FC<ISelect> = (props) => {
@@ -25,10 +26,10 @@ const Select: React.FC<ISelect> = (props) => {
       <div>
         <ul className="h-8 py-1 px-4" onClick={openMenuHandler}>
           <label htmlFor="department">
-            {activeValue ? activeValue : "Department"}
+            {activeValue ? activeValue : props.headline}
           </label>
           {isMenuOpen &&
-            props.data?.map((value) => {
+            props.data?.map((value: string) => {
               return (
                 <Option
                   value={value}
