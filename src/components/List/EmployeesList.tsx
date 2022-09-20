@@ -52,7 +52,12 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
   };
 
   const sortDates = (value: string) => {
-    console.log(value);
+    props.employees.sort((a: any, b: any) =>
+      isSorted
+        ? +new Date(a[value]) - +new Date(b[value])
+        : +new Date(b[value]) - +new Date(a[value])
+    );
+    setIsSorted((prevValue) => !prevValue);
   };
 
   return (
