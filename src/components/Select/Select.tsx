@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Option from "./Option";
 
 interface ISelect {
-  data?: string[] | any;
+  data: string[];
   headline: string | number;
 }
 
@@ -28,17 +28,19 @@ const Select: React.FC<ISelect> = (props) => {
           <label htmlFor="department">
             {activeValue ? activeValue : props.headline}
           </label>
-          {isMenuOpen &&
-            props.data?.map((value: string) => {
-              return (
-                <Option
-                  value={value}
-                  key={Math.random().toString()}
-                  onClick={setActiveValueHandler}
-                  activeValue={activeValue}
-                />
-              );
-            })}
+          <div className="absolute w-full left-0 mt-1 rounded-lg">
+            {isMenuOpen &&
+              props.data?.map((value: string) => {
+                return (
+                  <Option
+                    value={value}
+                    key={Math.random().toString()}
+                    onClick={setActiveValueHandler}
+                    activeValue={activeValue}
+                  />
+                );
+              })}
+          </div>
         </ul>
       </div>
     </div>

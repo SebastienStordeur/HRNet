@@ -8,19 +8,27 @@ import Input from "../../UI/Input";
 import InputValidator from "../Inputvalidator/InputValidator";
 import Label from "./Label";
 
+const letterRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+const numberRegex = /^\d+$/;
+const isNotEmpty: any = (value: string) => value.trim() !== "";
+
+const isValidText: any = (value: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  letterRegex.test(value) && isNotEmpty;
+};
+
+const isValidNumber: any = (value: string) => {
+  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+  numberRegex.test(value) && isNotEmpty;
+};
+
 const CreateEmployeeForm: React.FC = () => {
-  const letterRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
-  const isNotEmpty: any = (value: string) => value.trim() !== "";
-
-  const isValidText: any = (value: string) => {
-    letterRegex.test(value) && isNotEmpty();
-  };
-
   const {
     value: enteredFirstname,
     isValid: enteredFirstnameIsValid,
     hasError: firstnameInputHasError,
     valueChangeHandler: firstnameChangeHandler,
+    inputBlurHandler: firstnameBlurHandler,
     reset: resetFirstnameInput,
   } = useInput(isValidText);
 
@@ -29,12 +37,36 @@ const CreateEmployeeForm: React.FC = () => {
     isValid: enteredLastameIsValid,
     hasError: lastnameInputHasError,
     valueChangeHandler: lastnameChangeHandler,
+    inputBlurHandler: lastnameBlurHandler,
     reset: resetLastnameInput,
   } = useInput(isValidText);
 
+  const {
+    value: enteredCity,
+    isValid: enteredCityIsValid,
+    hasError: cityInputHasError,
+    valueChangeHandler: cityChangeHandler,
+    inputBlurHandler: cityBlurHandler,
+    reset: resetCityInput,
+  } = useInput(isValidText);
+
+  const {
+    value: enteredZip,
+    isValid: enteredZipIsValid,
+    hasError: zipInputHasError,
+    valueChangeHandler: zipChangeHandler,
+    inputBlurHandler: zipBlurHandler,
+    reset: resetZipInput,
+  } = useInput(isValidNumber);
+
   let formIsValid: boolean = false;
 
-  if (enteredFirstnameIsValid && enteredLastameIsValid) {
+  if (
+    enteredFirstnameIsValid &&
+    enteredLastameIsValid &&
+    enteredCityIsValid &&
+    enteredZipIsValid
+  ) {
     formIsValid = true;
   }
 
@@ -45,6 +77,10 @@ const CreateEmployeeForm: React.FC = () => {
     if (!formIsValid) return;
 
     setShowModal((prevValue) => !prevValue);
+    resetFirstnameInput();
+    resetLastnameInput();
+    resetCityInput();
+    resetZipInput();
   };
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -71,6 +107,7 @@ const CreateEmployeeForm: React.FC = () => {
                 type="text"
                 value={enteredFirstname}
                 onChange={firstnameChangeHandler}
+                onBlur={firstnameBlurHandler}
               />
             </Label>
             {firstnameInputHasError && <p>error</p>}
@@ -84,6 +121,7 @@ const CreateEmployeeForm: React.FC = () => {
                 type="text"
                 value={enteredLastname}
                 onChange={lastnameChangeHandler}
+                onBlur={lastnameBlurHandler}
               />
             </Label>
             {lastnameInputHasError && <p>Error</p>}
@@ -132,15 +170,17 @@ const CreateEmployeeForm: React.FC = () => {
           </InputValidator>
           <InputValidator>
             <Label htmlFor="city">
+              City
               <Input
                 id="city"
                 name="city"
                 type="text"
-                value=""
-                onChange={handleChange}
-                onBlur={handleChange}
+                value={enteredCity}
+                onChange={cityChangeHandler}
+                onBlur={cityBlurHandler}
               />
             </Label>
+            {cityInputHasError && <p>Error</p>}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="state">
@@ -155,11 +195,12 @@ const CreateEmployeeForm: React.FC = () => {
                 id="zip"
                 name="zip"
                 type="number"
-                value=""
-                onChange={handleChange}
-                onBlur={handleChange}
+                value={enteredZip}
+                onChange={zipChangeHandler}
+                onBlur={zipBlurHandler}
               />
             </Label>
+            {zipInputHasError && <p>Error</p>}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="department">

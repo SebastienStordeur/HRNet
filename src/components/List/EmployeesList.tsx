@@ -14,18 +14,8 @@ type Employe = {
 };
 
 interface IEmployee {
-  employees: {
-    firstName: string;
-    lastName: string;
-    dateOfBirth: string;
-    startDate: string;
-    department: string;
-    street: string;
-    city: string;
-    state: string;
-    zipCode: string;
-  }[];
-  numberPerPage: any;
+  employees: Employe[];
+  numberPerPage: number;
 }
 
 const EmployeesList: React.FC<IEmployee> = (props) => {
@@ -36,11 +26,8 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
 
   useEffect(() => {
     setNumberOfPages(Math.ceil(props.employees.length / props.numberPerPage));
-  }, [props]);
-
-  useEffect(() => {
     setCurrentPage(1);
-  }, [props.numberPerPage]);
+  }, [props]);
 
   const nextPageHandler = () => {
     setCurrentPage((prevValue) => prevValue + 1);
@@ -58,7 +45,9 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
   };
 
   const sortNumbers = () => {
-    props.employees.sort((a: any, b: any) => (isSorted ? b.zipCode - a.zipCode : a.zipCode - b.zipCode));
+    props.employees.sort((a: any, b: any) =>
+      isSorted ? b.zipCode - a.zipCode : a.zipCode - b.zipCode
+    );
     setIsSorted((prevValue) => !prevValue);
   };
 
@@ -84,23 +73,36 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
         </thead>
         <tbody className="w-full mt-10">
           {props.employees
-            .slice(0 + props.numberPerPage * (currentPage - 1), props.numberPerPage * currentPage)
+            .slice(
+              0 + props.numberPerPage * (currentPage - 1),
+              props.numberPerPage * currentPage
+            )
             .map((employee: Employe) => {
-              return <Employee key={Math.random().toString()} employee={employee} />;
+              return (
+                <Employee key={Math.random().toString()} employee={employee} />
+              );
             })}
         </tbody>
       </table>
       <div className="flex justify-between">
         <p>
           Showing {1 + props.numberPerPage * (currentPage - 1)} to
-          {props.numberPerPage <= props.employees.length && <span>{props.numberPerPage * currentPage}</span>}
-          {props.numberPerPage > props.employees.length && <span>{props.employees.length}</span>}
+          {props.numberPerPage <= props.employees.length && (
+            <span>{props.numberPerPage * currentPage}</span>
+          )}
+          {props.numberPerPage > props.employees.length && (
+            <span>{props.employees.length}</span>
+          )}
           of {props.employees.length}
         </p>
         <div>
-          {currentPage - 1 !== 0 && <button onClick={previousPageHandler}>Previous</button>}
+          {currentPage - 1 !== 0 && (
+            <button onClick={previousPageHandler}>Previous</button>
+          )}
           <span className="mx-4">{currentPage}</span>
-          {currentPage + 1 <= numberOfPages && <button onClick={nextPageHandler}>Next</button>}
+          {currentPage + 1 <= numberOfPages && (
+            <button onClick={nextPageHandler}>Next</button>
+          )}
         </div>
       </div>
     </section>

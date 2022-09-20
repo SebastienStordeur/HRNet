@@ -16,7 +16,7 @@ const Input: React.FC<IInput> = (props) => {
     <input
       id={props.id}
       type={props.type}
-      className={`h-10 w-full rounded-lg px-8 placeholder:text-blue border-solid border-2 border-blue ${
+      className={`h-10 w-full rounded-lg px-8 text-blue placeholder:text-blue border-solid border-2 border-blue ${
         props.className || ""
       }`}
       name={props.name}
