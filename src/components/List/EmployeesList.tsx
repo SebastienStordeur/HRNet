@@ -19,7 +19,6 @@ interface IEmployee {
 }
 
 const EmployeesList: React.FC<IEmployee> = (props) => {
-  console.log("nb / page", props.numberPerPage);
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [numberOfPages, setNumberOfPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);

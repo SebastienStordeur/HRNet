@@ -4,6 +4,18 @@ import EmployeesList from "../components/List/EmployeesList";
 import Search from "../components/List/Search";
 import Sorter from "../components/List/Sorter";
 
+type Employee = {
+  firstName : string,
+  lastName: string,
+  dateOfBirth: string,
+  startDate: string,
+  department: string,
+  street: string,
+  city: string,
+  state: string,
+  zipCode: string
+}
+
 const Employees: React.FC = () => {
   const [employees, setEmployees] = useState<any[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
@@ -14,7 +26,7 @@ const Employees: React.FC = () => {
     if (typeof storedEmployees === "string") {
       const data = JSON.parse(storedEmployees);
       const filteredData = data.filter(
-        (employee: any) =>
+        (employee: Employee) =>
           employee.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
           employee.lastName.toLowerCase().includes(searchValue.toLowerCase())
       );
