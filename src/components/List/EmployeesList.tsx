@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Employee from "./Employee";
+import SortDirection from "./SortDirection";
+import HeadTable from "./SortDirection";
 
 type Employe = {
   firstName: string;
@@ -19,9 +21,23 @@ interface IEmployee {
 }
 
 const EmployeesList: React.FC<IEmployee> = (props) => {
+  const initialState = {
+    firstName: null,
+    lastName: null,
+    startDate: null,
+    department: null,
+    birthDate: null,
+    street: null,
+    city: null,
+    state: null,
+    zipCode: null,
+  };
+
   const [isSorted, setIsSorted] = useState<boolean>(false);
   const [numberOfPages, setNumberOfPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
+
+  const [sortStates, setSortStates] = useState<any>(initialState);
 
   useEffect(() => {
     setNumberOfPages(Math.ceil(props.employees.length / props.numberPerPage));
@@ -38,9 +54,18 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
 
   const sortAlphabetically = (value: string) => {
     props.employees.sort((a: any, b: any) =>
-      isSorted ? (a[value] > b[value] ? -1 : 1) : a[value] > b[value] ? 1 : -1
+      sortStates[value]
+        ? a[value] > b[value]
+          ? -1
+          : 1
+        : a[value] > b[value]
+        ? 1
+        : -1
     );
-    setIsSorted((prevValue) => !prevValue);
+    /* setIsSorted((prevValue) => !prevValue); */
+    sortStates[value] === null || sortStates[value] === false
+      ? setSortStates({ firstName: true })
+      : setSortStates({ firstName: false });
   };
 
   const sortNumbers = () => {
@@ -64,22 +89,62 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
     props.numberPerPage * currentPage
   );
 
-  console.log(employeesSlice);
-
   return (
     <section id="employee-list" className="max-w-[1110px] mx-auto mt-5 ">
       <table className="w-full">
         <thead>
-          <tr className="grid grid-cols-9 text-white w-full bg-blue h-10 font-medium text-center py-1.5">
-            <th onClick={() => sortAlphabetically("firstName")}>First Name</th>
-            <th onClick={() => sortAlphabetically("lastName")}>Last Name</th>
-            <th onClick={() => sortDates("startDate")}>Start Date</th>
-            <th onClick={() => sortAlphabetically("department")}>Department</th>
-            <th onClick={() => sortDates("dateOfBirth")}>Date of Birth</th>
-            <th onClick={() => sortAlphabetically("street")}>Street</th>
-            <th onClick={() => sortAlphabetically("city")}>City</th>
-            <th onClick={() => sortAlphabetically("state")}>State</th>
-            <th onClick={sortNumbers}>Zip Code</th>
+          <tr className="grid grid-cols-9 text-white w-full bg-blue h-10 font-small text-center text-sm py-2.5 cursor-pointer">
+            <th
+              className="flex justify-center"
+              onClick={() => sortAlphabetically("firstName")}
+            >
+              First Name <SortDirection />
+            </th>
+            <th
+              className="flex justify-center"
+              onClick={() => sortAlphabetically("lastName")}
+            >
+              Last Name <SortDirection />
+            </th>
+            <th
+              className="flex justify-center"
+              onClick={() => sortDates("startDate")}
+            >
+              Start Date <SortDirection />
+            </th>
+            <th
+              className="flex justify-center"
+              onClick={() => sortAlphabetically("department")}
+            >
+              Department <SortDirection />
+            </th>
+            <th
+              className="flex justify-center"
+              onClick={() => sortDates("dateOfBirth")}
+            >
+              Date of Birth <SortDirection />
+            </th>
+            <th
+              className="flex justify-center"
+              onClick={() => sortAlphabetically("street")}
+            >
+              Street <SortDirection />
+            </th>
+            <th
+              className="flex justify-center"
+              onClick={() => sortAlphabetically("city")}
+            >
+              City <SortDirection />
+            </th>
+            <th
+              className="flex justify-center"
+              onClick={() => sortAlphabetically("state")}
+            >
+              State <SortDirection />
+            </th>
+            <th className="flex justify-center" onClick={sortNumbers}>
+              Zip Code <SortDirection />
+            </th>
           </tr>
         </thead>
         <tbody className="w-full mt-10">

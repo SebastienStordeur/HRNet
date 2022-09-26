@@ -28,7 +28,7 @@ const Select: React.FC<ISelect> = (props) => {
           <label htmlFor="department">
             {activeValue ? activeValue : props.headline}
           </label>
-          <div className="absolute w-full left-0 mt-1 rounded-lg">
+          <div className="absolute w-full left-0 mt-1 rounded-lg z-10 max-h-72 overflow-auto">
             {isMenuOpen &&
               props.data?.map((value: string) => {
                 return (

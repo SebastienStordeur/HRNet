@@ -10,3 +10,7 @@
   box-sizing: border-box;
   font-family: "Montserrat", sans-serif;
 }
+
+.arrow-active {
+    filter: invert(48%) brightness(200%) contrast(100%);
+}
