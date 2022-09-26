@@ -59,6 +59,13 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
     setIsSorted((prevValue) => !prevValue);
   };
 
+  const employeesSlice = props.employees.slice(
+    0 + props.numberPerPage * (currentPage - 1),
+    props.numberPerPage * currentPage
+  );
+
+  console.log(employeesSlice);
+
   return (
     <section id="employee-list" className="max-w-[1110px] mx-auto mt-5 ">
       <table className="w-full">
@@ -92,12 +99,20 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
         <p>
           Showing {1 + props.numberPerPage * (currentPage - 1)} to
           {props.numberPerPage <= props.employees.length && (
-            <span>{props.numberPerPage * currentPage}</span>
+            <span>
+              &nbsp;
+              {employeesSlice.length === props.numberPerPage
+                ? props.numberPerPage * currentPage
+                : 1 +
+                  props.numberPerPage * (currentPage - 1) +
+                  employeesSlice.length -
+                  1}
+            </span>
           )}
           {props.numberPerPage > props.employees.length && (
-            <span>{props.employees.length}</span>
+            <span> &nbsp; {props.employees.length}</span>
           )}
-          of {props.employees.length}
+          &nbsp;of {props.employees.length}
         </p>
         <div>
           {currentPage - 1 !== 0 && (

@@ -1,0 +1,57 @@
+[
+  {
+    "firstName": "Julien",
+    "lastName": "Dupont",
+    "dateOfBirth": "09/02/1992",
+    "startDate": "10/10/2015",
+    "department": "Engineering",
+    "street": "Rue de Paris",
+    "city": "Paris",
+    "state": "KS",
+    "zipCode": "75000"
+  },
+  {
+    "firstName": "Coralie",
+    "lastName": "Nom",
+    "dateOfBirth": "09/02/1982",
+    "startDate": "10/10/2018",
+    "department": "Sales",
+    "street": "New York Street",
+    "city": "New York",
+    "state": "NY",
+    "zipCode": "20000"
+  },
+  {
+    "firstName": "Tony",
+    "lastName": "Spark",
+    "dateOfBirth": "09/02/2000",
+    "startDate": "10/10/2022",
+    "department": "Marketing",
+    "street": "Random street",
+    "city": "City",
+    "state": "AK",
+    "zipCode": "15000"
+  },
+  {
+    "firstName": "Shadi",
+    "lastName": "Thorn",
+    "dateOfBirth": "09/02/1994",
+    "startDate": "10/10/2015",
+    "department": "Engineering",
+    "street": "Rue de Paris",
+    "city": "Paris",
+    "state": "KS",
+    "zipCode": "75000"
+  },
+  {
+    "firstName": "Julien",
+    "lastName": "Dupont",
+    "dateOfBirth": "09/02/1992",
+    "startDate": "10/10/2015",
+    "department": "Engineering",
+    "street": "Rue de Paris",
+    "city": "Paris",
+    "state": "KS",
+    "zipCode": "75000"
+  }
+]
