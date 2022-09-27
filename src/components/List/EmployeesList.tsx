@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Employee from "./Employee";
 import SortDirection from "./SortDirection";
-import HeadTable from "./SortDirection";
 
 type Employe = {
   firstName: string;
@@ -26,14 +25,13 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
     lastName: null,
     startDate: null,
     department: null,
-    birthDate: null,
+    dateOfBirth: null,
     street: null,
     city: null,
     state: null,
     zipCode: null,
   };
 
-  const [isSorted, setIsSorted] = useState<boolean>(false);
   const [numberOfPages, setNumberOfPages] = useState<number>(1);
   const [currentPage, setCurrentPage] = useState<number>(1);
 
@@ -52,7 +50,7 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
     setCurrentPage((prevValue) => prevValue - 1);
   };
 
-  const sortAlphabetically = (value: string) => {
+  const sortAlphabetically: (value: string) => void = (value: string) => {
     props.employees.sort((a: any, b: any) =>
       sortStates[value]
         ? a[value] > b[value]
@@ -62,26 +60,29 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
         ? 1
         : -1
     );
-    /* setIsSorted((prevValue) => !prevValue); */
     sortStates[value] === null || sortStates[value] === false
-      ? setSortStates({ firstName: true })
-      : setSortStates({ firstName: false });
+      ? setSortStates({ ...initialState, [value]: true })
+      : setSortStates({ ...initialState, [value]: false });
   };
 
-  const sortNumbers = () => {
+  const sortNumbers = (value: any) => {
     props.employees.sort((a: any, b: any) =>
-      isSorted ? b.zipCode - a.zipCode : a.zipCode - b.zipCode
+      sortStates[value] ? b.zipCode - a.zipCode : a.zipCode - b.zipCode
     );
-    setIsSorted((prevValue) => !prevValue);
+    sortStates[value] === null || sortStates[value] === false
+      ? setSortStates({ ...initialState, [value]: true })
+      : setSortStates({ ...initialState, [value]: false });
   };
 
-  const sortDates = (value: string) => {
+  const sortDates: (value: string) => void = (value: string) => {
     props.employees.sort((a: any, b: any) =>
-      isSorted
+      sortStates[value]
         ? +new Date(a[value]) - +new Date(b[value])
         : +new Date(b[value]) - +new Date(a[value])
     );
-    setIsSorted((prevValue) => !prevValue);
+    sortStates[value] === null || sortStates[value] === false
+      ? setSortStates({ ...initialState, [value]: true })
+      : setSortStates({ ...initialState, [value]: false });
   };
 
   const employeesSlice = props.employees.slice(
@@ -98,52 +99,55 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
               className="flex justify-center"
               onClick={() => sortAlphabetically("firstName")}
             >
-              First Name <SortDirection />
+              First Name <SortDirection state={sortStates.firstName} />
             </th>
             <th
               className="flex justify-center"
               onClick={() => sortAlphabetically("lastName")}
             >
-              Last Name <SortDirection />
+              Last Name <SortDirection state={sortStates.lastName} />
             </th>
             <th
               className="flex justify-center"
               onClick={() => sortDates("startDate")}
             >
-              Start Date <SortDirection />
+              Start Date <SortDirection state={sortStates.startDate} />
             </th>
             <th
               className="flex justify-center"
               onClick={() => sortAlphabetically("department")}
             >
-              Department <SortDirection />
+              Department <SortDirection state={sortStates.department} />
             </th>
             <th
               className="flex justify-center"
               onClick={() => sortDates("dateOfBirth")}
             >
-              Date of Birth <SortDirection />
+              Date of Birth <SortDirection state={sortStates.dateOfBirth} />
             </th>
             <th
               className="flex justify-center"
               onClick={() => sortAlphabetically("street")}
             >
-              Street <SortDirection />
+              Street <SortDirection state={sortStates.street} />
             </th>
             <th
               className="flex justify-center"
               onClick={() => sortAlphabetically("city")}
             >
-              City <SortDirection />
+              City <SortDirection state={sortStates.city} />
             </th>
             <th
               className="flex justify-center"
               onClick={() => sortAlphabetically("state")}
             >
-              State <SortDirection />
+              State <SortDirection state={sortStates.state} />
             </th>
-            <th className="flex justify-center" onClick={sortNumbers}>
-              Zip Code <SortDirection />
+            <th
+              className="flex justify-center"
+              onClick={() => sortNumbers("zipCode")}
+            >
+              Zip Code <SortDirection state={sortStates.zipCode} />
             </th>
           </tr>
         </thead>
