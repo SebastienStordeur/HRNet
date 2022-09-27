@@ -3,7 +3,7 @@ import ArrowUp from "../../assets/Arrow_Up.svg";
 import ArrowDown from "../../assets/Arrow_Down.svg";
 
 interface ISortdirection {
-  state?: null | boolean;
+  state: null | boolean;
 }
 
 const SortDirection: React.FC<ISortdirection> = (props) => {

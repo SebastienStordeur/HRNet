@@ -10,7 +10,9 @@ interface IButton {
 const Button: React.FC<IButton> = (props) => {
   return (
     <button
-      className={`bg-blue h-10 px-4 text-white font-bold rounded-lg ${props.className || ""}`}
+      className={`bg-blue h-10 px-4 text-white font-bold rounded-lg ${
+        props.className || ""
+      }`}
       type={props.type || "button"}
       onClick={props.onClick}
     >

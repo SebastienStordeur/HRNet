@@ -8,19 +8,16 @@ import Input from "../../UI/Input";
 import InputValidator from "../Inputvalidator/InputValidator";
 import Label from "./Label";
 
-const letterRegex = /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
-const numberRegex = /^\d+$/;
+const letterRegex: RegExp =
+  /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
+const numberRegex: RegExp = /^\d+$/;
 const isNotEmpty: any = (value: string) => value.trim() !== "";
 
-const isValidText: any = (value: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-  letterRegex.test(value) && isNotEmpty;
-};
+const isValidText: any = (value: string) =>
+  letterRegex.test(value) && isNotEmpty && value.length > 2;
 
-const isValidNumber: any = (value: string) => {
-  // eslint-disable-next-line @typescript-eslint/no-unused-expressions
+const isValidNumber: any = (value: string) =>
   numberRegex.test(value) && isNotEmpty;
-};
 
 const CreateEmployeeForm: React.FC = () => {
   const {
@@ -32,6 +29,7 @@ const CreateEmployeeForm: React.FC = () => {
     reset: resetFirstnameInput,
   } = useInput(isValidText);
 
+  console.log(firstnameInputHasError);
   const {
     value: enteredLastname,
     isValid: enteredLastameIsValid,
@@ -39,6 +37,15 @@ const CreateEmployeeForm: React.FC = () => {
     valueChangeHandler: lastnameChangeHandler,
     inputBlurHandler: lastnameBlurHandler,
     reset: resetLastnameInput,
+  } = useInput(isValidText);
+
+  const {
+    value: enteredStreet,
+    isValid: enteredStreetIsValid,
+    hasError: streetInputHasError,
+    valueChangeHandler: streetChangeHandler,
+    inputBlurHandler: streetBlurHandler,
+    reset: resetStreetInput,
   } = useInput(isValidText);
 
   const {
@@ -64,6 +71,7 @@ const CreateEmployeeForm: React.FC = () => {
   if (
     enteredFirstnameIsValid &&
     enteredLastameIsValid &&
+    enteredStreetIsValid &&
     enteredCityIsValid &&
     enteredZipIsValid
   ) {
@@ -74,11 +82,13 @@ const CreateEmployeeForm: React.FC = () => {
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
+
     if (!formIsValid) return;
 
     setShowModal((prevValue) => !prevValue);
     resetFirstnameInput();
     resetLastnameInput();
+    resetStreetInput();
     resetCityInput();
     resetZipInput();
   };
@@ -162,11 +172,12 @@ const CreateEmployeeForm: React.FC = () => {
                 id="street"
                 name="street"
                 type="text"
-                value=""
-                onChange={handleChange}
-                onBlur={handleChange}
+                value={enteredStreet}
+                onChange={streetChangeHandler}
+                onBlur={streetBlurHandler}
               />
             </Label>
+            {streetInputHasError && <p>Error</p>}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="city">
