@@ -17,7 +17,7 @@ const isValidText: any = (value: string) =>
   letterRegex.test(value) && isNotEmpty && value.length > 2;
 
 const isValidNumber: any = (value: string) =>
-  numberRegex.test(value) && isNotEmpty;
+  numberRegex.test(value) && isNotEmpty && value.length === 5;
 
 const CreateEmployeeForm: React.FC = () => {
   const {
@@ -29,7 +29,6 @@ const CreateEmployeeForm: React.FC = () => {
     reset: resetFirstnameInput,
   } = useInput(isValidText);
 
-  console.log(firstnameInputHasError);
   const {
     value: enteredLastname,
     isValid: enteredLastameIsValid,
@@ -95,7 +94,7 @@ const CreateEmployeeForm: React.FC = () => {
 
   const [showModal, setShowModal] = useState<boolean>(false);
 
-  const showModalHandler = () => {
+  const showModalHandler: () => void = () => {
     setShowModal((prevValue) => !prevValue);
   };
 
@@ -120,7 +119,11 @@ const CreateEmployeeForm: React.FC = () => {
                 onBlur={firstnameBlurHandler}
               />
             </Label>
-            {firstnameInputHasError && <p>error</p>}
+            {firstnameInputHasError && (
+              <p className="text-sm font-bold text-red">
+                Wrong format or empty field
+              </p>
+            )}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="name">
@@ -134,7 +137,11 @@ const CreateEmployeeForm: React.FC = () => {
                 onBlur={lastnameBlurHandler}
               />
             </Label>
-            {lastnameInputHasError && <p>Error</p>}
+            {lastnameInputHasError && (
+              <p className="text-sm font-bold text-red">
+                Wrong format or empty field
+              </p>
+            )}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="birth">
@@ -177,7 +184,11 @@ const CreateEmployeeForm: React.FC = () => {
                 onBlur={streetBlurHandler}
               />
             </Label>
-            {streetInputHasError && <p>Error</p>}
+            {streetInputHasError && (
+              <p className="text-sm font-bold text-red">
+                Wrong format or empty field
+              </p>
+            )}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="city">
@@ -191,7 +202,11 @@ const CreateEmployeeForm: React.FC = () => {
                 onBlur={cityBlurHandler}
               />
             </Label>
-            {cityInputHasError && <p>Error</p>}
+            {cityInputHasError && (
+              <p className="text-sm font-bold text-red">
+                Wrong format or empty field
+              </p>
+            )}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="state">
@@ -211,7 +226,11 @@ const CreateEmployeeForm: React.FC = () => {
                 onBlur={zipBlurHandler}
               />
             </Label>
-            {zipInputHasError && <p>Error</p>}
+            {zipInputHasError && (
+              <p className="text-sm font-bold text-red">
+                Wrong format or empty field
+              </p>
+            )}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="department">
