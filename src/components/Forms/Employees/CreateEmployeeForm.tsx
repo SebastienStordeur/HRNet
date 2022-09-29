@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { departments, states } from "../../../utils/datalist";
 import useInput from "../../../Hooks/useInput";
 import Modal from "../../Modal/Modal";
-import Select from "../../Select/Select";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
 import InputValidator from "../Inputvalidator/InputValidator";
 import Label from "./Label";
+import { ListSelect } from "list-select";
 
 const letterRegex: RegExp =
   /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
@@ -211,7 +211,14 @@ const CreateEmployeeForm: React.FC = () => {
           <InputValidator>
             <Label htmlFor="state">
               State
-              <Select data={states} headline="State"></Select>
+              <ListSelect
+                data={states}
+                headline="State"
+                class="bg-white text-blue rounded font-semibold cursor-pointer relative"
+                listContainerStyle="absolute w-full left-0 mt-1 rounded-lg z-10 max-h-72 overflow-auto"
+                listStyle="bg-white text-blue"
+                defaultListStyle="px-4 py-1 w-full h-8 border-solid border-[1px] border-blue hover:bg-blue hover:text-white cursor-pointer"
+              />
             </Label>
           </InputValidator>
           <InputValidator>
@@ -235,7 +242,15 @@ const CreateEmployeeForm: React.FC = () => {
           <InputValidator>
             <Label htmlFor="department">
               Department
-              <Select data={departments} headline="Department"></Select>
+              <ListSelect
+                data={departments}
+                headline="Department"
+                class="bg-white text-blue rounded font-semibold cursor-pointer relative"
+                listStyle="bg-white text-blue"
+                activeValueStyle="bg-blue text-white"
+                defaultListStyle="px-4 py-1 w-full h-8 border-solid border-[1px] border-blue hover:bg-blue hover:text-white cursor-pointer"
+                listContainerStyle="absolute w-full left-0 mt-1 rounded-lg"
+              />
             </Label>
           </InputValidator>
         </div>
