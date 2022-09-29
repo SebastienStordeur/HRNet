@@ -7,6 +7,8 @@ import Input from "../../UI/Input";
 import InputValidator from "../Inputvalidator/InputValidator";
 import Label from "./Label";
 import { ListSelect } from "list-select";
+import Calendar from "react-calendar";
+import "react-calendar/dist/Calendar.css";
 
 const letterRegex: RegExp =
   /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
@@ -20,6 +22,16 @@ const isValidNumber: any = (value: string) =>
   numberRegex.test(value) && isNotEmpty && value.length === 5;
 
 const CreateEmployeeForm: React.FC = () => {
+  const [startValue, setStartValue] = useState<any>(new Date());
+  const [startCalendarIsVisble, setStartCalendarIsVisible] =
+    useState<boolean>(false);
+  const [birthValue, setBirthValue] = useState<any>(new Date());
+
+  console.log(startValue);
+  const openStartCalendarHandler = () => {
+    setStartCalendarIsVisible(true);
+  };
+
   const {
     value: enteredFirstname,
     isValid: enteredFirstnameIsValid,
@@ -162,10 +174,14 @@ const CreateEmployeeForm: React.FC = () => {
               <Input
                 id="start"
                 name="startDate"
-                type="date"
+                type="input"
                 value=""
                 onChange={handleChange}
                 onBlur={handleChange}
+              />
+              <Calendar
+                onChange={(value: any) => setStartValue(value)}
+                value={startValue}
               />
             </Label>
           </InputValidator>

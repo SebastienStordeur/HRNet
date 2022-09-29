@@ -14,3 +14,7 @@
 .arrow-active {
     filter: invert(48%) brightness(200%) contrast(100%);
 }
+
+.react-calendar {
+  background-color: #0d3080;
+}

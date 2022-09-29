@@ -1,28 +1,28 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Main from "../components/Layout/Main";
 import EmployeesList, { Employe } from "../components/List/EmployeesList";
 import Search from "../components/List/Search";
 import Sorter from "../components/List/Sorter";
+import EmployeeContext from "../store/EmployeeContext";
 
 const Employees: React.FC = () => {
-  const [employees, setEmployees] = useState<Employe[]>([]);
+  const employeeContext = useContext(EmployeeContext);
+  const employeesArray = employeeContext.employees;
+
+  const [employees, setEmployees] = useState<Employe[]>(employeesArray);
   const [searchValue, setSearchValue] = useState<string>("");
   const [numberPerPage, setNumberPerPage] = useState<number>(10);
-  const storedEmployees: string | null = localStorage.getItem("employees");
+  //const storedEmployees: string | null = localStorage.getItem("employees");
 
   useEffect(() => {
-    if (typeof storedEmployees === "string") {
-      const data: Employe[] = JSON.parse(storedEmployees);
-      const filteredData: Employe[] = data.filter(
-        (employee: Employe) =>
-          employee.firstName
-            .toLowerCase()
-            .includes(searchValue.toLowerCase()) ||
-          employee.lastName.toLowerCase().includes(searchValue.toLowerCase())
-      );
-      setEmployees(filteredData);
-    }
-  }, [storedEmployees, searchValue]);
+    const data: Employe[] = employeesArray;
+    const filteredData: Employe[] = data.filter(
+      (employee: Employe) =>
+        employee.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
+        employee.lastName.toLowerCase().includes(searchValue.toLowerCase())
+    );
+    setEmployees(filteredData);
+  }, [employeesArray, searchValue]);
 
   return (
     <Main>
