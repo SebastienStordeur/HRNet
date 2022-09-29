@@ -9,6 +9,7 @@ import Label from "./Label";
 import { ListSelect } from "list-select";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { months } from "../../../utils/months";
 
 const letterRegex: RegExp =
   /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
@@ -27,9 +28,23 @@ const CreateEmployeeForm: React.FC = () => {
     useState<boolean>(false);
   const [birthValue, setBirthValue] = useState<any>(new Date());
 
-  console.log(startValue);
   const openStartCalendarHandler = () => {
     setStartCalendarIsVisible(true);
+  };
+
+  const formatDate = (value: any) => {
+    const unformattedDate: string[] = value.toString().split(" ").splice(1, 3);
+    const monthNumber = months.find(
+      (month) => month.name === unformattedDate[0]
+    );
+
+    if (monthNumber) {
+      unformattedDate[0] = monthNumber?.number;
+    }
+
+    const formattedDate = unformattedDate.join("/");
+
+    return formattedDate;
   };
 
   const {
@@ -180,7 +195,7 @@ const CreateEmployeeForm: React.FC = () => {
                 onBlur={handleChange}
               />
               <Calendar
-                onChange={(value: any) => setStartValue(value)}
+                onChange={(value: any) => formatDate(value)}
                 value={startValue}
               />
             </Label>

@@ -8,15 +8,12 @@ import EmployeeContext from "../store/EmployeeContext";
 const Employees: React.FC = () => {
   const employeeContext = useContext(EmployeeContext);
   const employeesArray = employeeContext.employees;
-
   const [employees, setEmployees] = useState<Employe[]>(employeesArray);
   const [searchValue, setSearchValue] = useState<string>("");
   const [numberPerPage, setNumberPerPage] = useState<number>(10);
-  //const storedEmployees: string | null = localStorage.getItem("employees");
 
   useEffect(() => {
-    const data: Employe[] = employeesArray;
-    const filteredData: Employe[] = data.filter(
+    const filteredData: Employe[] = employeesArray.filter(
       (employee: Employe) =>
         employee.firstName.toLowerCase().includes(searchValue.toLowerCase()) ||
         employee.lastName.toLowerCase().includes(searchValue.toLowerCase())

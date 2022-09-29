@@ -8,7 +8,7 @@ type EmployeeContextProviderProps = {
 
 export const EmployeeContext = React.createContext<{
   employees: Employe[];
-  addEmployee: () => void;
+  addEmployee: (newEmployee: Employe) => void;
 }>({
   employees: [],
   addEmployee: () => {},
@@ -19,7 +19,9 @@ export const EmployeeProvider = ({
 }: EmployeeContextProviderProps) => {
   const [employees, setEmployees] = useState<Employe[]>(data);
 
-  const addEmployee: any = (newEmployee: any) => {
+  const addEmployee: (newEmployee: Employe) => void = (
+    newEmployee: Employe
+  ) => {
     setEmployees([...employees, newEmployee]);
   };
 
