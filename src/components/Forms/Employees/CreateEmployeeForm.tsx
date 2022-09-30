@@ -1,6 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import { departments, states, statesComplete } from "../../../utils/datalist";
-import useInput from "../../../Hooks/useInput";
 import Modal from "../../Modal/Modal";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
@@ -12,27 +11,40 @@ import "react-calendar/dist/Calendar.css";
 import { months } from "../../../utils/months";
 import EmployeeContext from "../../../store/EmployeeContext";
 
-const letterRegex: RegExp =
-  /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
-const numberRegex: RegExp = /^\d+$/;
-const isNotEmpty: any = (value: string) => value.trim() !== "";
-
-const isValidText: any = (value: string) =>
-  letterRegex.test(value) && isNotEmpty && value.length > 2;
-
-const isValidNumber: any = (value: string) =>
-  numberRegex.test(value) && isNotEmpty && value.length === 5;
-
 const CreateEmployeeForm: React.FC = () => {
   const employees = useContext(EmployeeContext);
 
-  const [startValue, setStartValue] = useState<any>(new Date());
+  const firstnameRef = useRef<HTMLInputElement>();
+  const lastnameRef = useRef<HTMLInputElement>();
+  const streetRef = useRef<HTMLInputElement>();
+  const cityRef = useRef<HTMLInputElement>();
+  const zipRef = useRef<HTMLInputElement>();
+
+  const [form, setForm] = useState<any>({
+    firstName: "",
+    firstNameHasError: false,
+    lastName: "",
+    lastNameHasError: false,
+    street: "",
+    streetHasError: false,
+    city: "",
+    cityHasError: false,
+    zipCode: "",
+    zipHasError: false,
+  });
+
+  const startValue = new Date();
   const [startWorkValue, setStartWorkValue] = useState<string>("");
   const [startCalendarIsVisible, setStartCalendarIsVisible] =
     useState<boolean>(false);
   const [birthValue, setBirthValue] = useState<string>("");
   const [birthCalendarIsVisible, setBirthCalendarIsVisible] =
     useState<boolean>(false);
+
+  const [departmentsHasError, setDepartmentsHasError] =
+    useState<boolean>(false);
+  const [statesHasError, setStatesHasError] = useState<boolean>(false);
+
   const stateLabel = document.querySelector(
     "#state > label > div > div > ul > label"
   );
@@ -40,23 +52,12 @@ const CreateEmployeeForm: React.FC = () => {
     "#department > label > div > div > ul > label"
   );
 
-  const [stateValue, setStateValue] = useState<string>("");
-
-  useEffect(() => {
-    const stateValueHandler = () => {
-      const abbreviation = statesComplete.find(
-        (state) => state.name === stateLabel?.id
-      );
-
-      if (abbreviation !== undefined) {
-        setStateValue(abbreviation?.abbreviation);
-      }
-    };
-    stateValueHandler();
-  }, [stateLabel, stateValue]);
-
   const openStartCalendarHandler = () => {
-    setStartCalendarIsVisible((value) => !value);
+    setStartCalendarIsVisible((value: boolean) => !value);
+  };
+
+  const openBirthCalendarHandler = () => {
+    setBirthCalendarIsVisible((value: boolean) => !value);
   };
 
   const formatDate = (value: string, dataType: string) => {
@@ -64,75 +65,18 @@ const CreateEmployeeForm: React.FC = () => {
     const monthNumber = months.find(
       (month) => month.name === unformattedDate[0]
     );
-
     if (monthNumber) {
       unformattedDate[0] = monthNumber?.number;
     }
-
     const formattedDate = unformattedDate.join("/");
-
     dataType === "birth"
       ? setBirthValue(formattedDate)
       : setStartWorkValue(formattedDate);
   };
 
-  const {
-    value: enteredFirstname,
-    isValid: enteredFirstnameIsValid,
-    hasError: firstnameInputHasError,
-    valueChangeHandler: firstnameChangeHandler,
-    inputBlurHandler: firstnameBlurHandler,
-    reset: resetFirstnameInput,
-  } = useInput(isValidText);
-
-  const {
-    value: enteredLastname,
-    isValid: enteredLastameIsValid,
-    hasError: lastnameInputHasError,
-    valueChangeHandler: lastnameChangeHandler,
-    inputBlurHandler: lastnameBlurHandler,
-    reset: resetLastnameInput,
-  } = useInput(isValidText);
-
-  const {
-    value: enteredStreet,
-    isValid: enteredStreetIsValid,
-    hasError: streetInputHasError,
-    valueChangeHandler: streetChangeHandler,
-    inputBlurHandler: streetBlurHandler,
-    reset: resetStreetInput,
-  } = useInput(isValidText);
-
-  const {
-    value: enteredCity,
-    isValid: enteredCityIsValid,
-    hasError: cityInputHasError,
-    valueChangeHandler: cityChangeHandler,
-    inputBlurHandler: cityBlurHandler,
-    reset: resetCityInput,
-  } = useInput(isValidText);
-
-  const {
-    value: enteredZip,
-    isValid: enteredZipIsValid,
-    hasError: zipInputHasError,
-    valueChangeHandler: zipChangeHandler,
-    inputBlurHandler: zipBlurHandler,
-    reset: resetZipInput,
-  } = useInput(isValidNumber);
-
   let formIsValid: boolean = false;
 
-  if (
-    enteredFirstnameIsValid &&
-    enteredLastameIsValid &&
-    enteredStreetIsValid &&
-    enteredCityIsValid &&
-    enteredZipIsValid &&
-    birthValue !== "" &&
-    startWorkValue !== "" &&
-    stateValue !== "State"
-  ) {
+  if (birthValue !== "" && startWorkValue !== "") {
     formIsValid = true;
   }
 
@@ -141,28 +85,35 @@ const CreateEmployeeForm: React.FC = () => {
   ) => {
     event.preventDefault();
 
+    const abbreviation = statesComplete.find(
+      (state) => state.name === stateLabel?.id
+    );
+
     const newEmployee = {
-      firstName: enteredFirstname,
-      lastName: enteredLastname,
+      firstName: form.firstName,
+      lastName: form.lastName,
       dateOfBirth: birthValue,
       startDate: startWorkValue,
-      street: enteredStreet,
-      city: enteredCity,
-      state: stateValue,
-      zipCode: enteredZip,
+      street: form.street,
+      city: form.city,
+      state: abbreviation ? abbreviation?.abbreviation : "",
+      zipCode: form.zipCode,
       department: departmentLabel?.id ? departmentLabel.id : "",
     };
 
-    if (!formIsValid) return;
+    newEmployee.department === "departments"
+      ? setDepartmentsHasError(true)
+      : setDepartmentsHasError(false);
 
-    employees.employees.push(newEmployee);
+    newEmployee.state === "states"
+      ? setStatesHasError(true)
+      : setStatesHasError(false);
+
+    if (!formIsValid && departmentsHasError) return;
+
+    employees.addEmployee(newEmployee);
 
     setShowModal((prevValue) => !prevValue);
-    resetFirstnameInput();
-    resetLastnameInput();
-    resetStreetInput();
-    resetCityInput();
-    resetZipInput();
     setBirthValue("");
     setStartWorkValue("");
   };
@@ -187,12 +138,10 @@ const CreateEmployeeForm: React.FC = () => {
                 id="firstName"
                 name="firstName"
                 type="text"
-                value={enteredFirstname}
-                onChange={firstnameChangeHandler}
-                onBlur={firstnameBlurHandler}
+                value={form.firstName}
               />
             </Label>
-            {firstnameInputHasError && (
+            {form.firstNameHasError && (
               <p className="text-sm font-bold text-red">
                 Wrong format or empty field
               </p>
@@ -205,12 +154,11 @@ const CreateEmployeeForm: React.FC = () => {
                 id="name"
                 name="name"
                 type="text"
-                value={enteredLastname}
-                onChange={lastnameChangeHandler}
-                onBlur={lastnameBlurHandler}
+                value={form.lastName}
+                /* onChange={lastnameChangeHandler} */
               />
             </Label>
-            {lastnameInputHasError && (
+            {form.lastNameHasError && (
               <p className="text-sm font-bold text-red">
                 Wrong format or empty field
               </p>
@@ -224,9 +172,7 @@ const CreateEmployeeForm: React.FC = () => {
                 name="birth"
                 type="input"
                 value={birthValue}
-                onClick={() =>
-                  setBirthCalendarIsVisible((prevValue) => !prevValue)
-                }
+                onClick={openBirthCalendarHandler}
                 readonly
               />
               {birthCalendarIsVisible && (
@@ -270,12 +216,11 @@ const CreateEmployeeForm: React.FC = () => {
                 id="street"
                 name="street"
                 type="text"
-                value={enteredStreet}
-                onChange={streetChangeHandler}
-                onBlur={streetBlurHandler}
+                value={form.street}
+                /* onChange={streetChangeHandler} */
               />
             </Label>
-            {streetInputHasError && (
+            {form.streetHasError && (
               <p className="text-sm font-bold text-red">
                 Wrong format or empty field
               </p>
@@ -288,12 +233,11 @@ const CreateEmployeeForm: React.FC = () => {
                 id="city"
                 name="city"
                 type="text"
-                value={enteredCity}
-                onChange={cityChangeHandler}
-                onBlur={cityBlurHandler}
+                value={form.city}
+                /* onChange={cityChangeHandler} */
               />
             </Label>
-            {cityInputHasError && (
+            {form.cityHasError && (
               <p className="text-sm font-bold text-red">
                 Wrong format or empty field
               </p>
@@ -303,13 +247,19 @@ const CreateEmployeeForm: React.FC = () => {
             <Label htmlFor="state">
               State
               <ListSelect
+                id="states"
                 data={states}
                 headline="State"
                 class="bg-white text-blue rounded font-semibold cursor-pointer relative"
                 listContainerStyle="absolute w-full left-0 mt-1 rounded-lg z-[100] max-h-72 overflow-auto"
                 listStyle="bg-white text-blue"
-                defaultListStyle="px-4 py-1 w-full h-8 border-solid border-[1px] border-blue hover:bg-blue hover:text-white cursor-pointer"
+                defaultListStyle="px-4 py-1 w-full h-8 z-[100] border-solid border-[1px] bg-blue text-white border-blue hover:bg-blue hover:text-white cursor-pointer"
               />
+              {statesHasError && (
+                <p className="text-sm font-bold text-red">
+                  Please choose a valid option
+                </p>
+              )}
             </Label>
           </InputValidator>
           <InputValidator id="state">
@@ -319,12 +269,11 @@ const CreateEmployeeForm: React.FC = () => {
                 id="zip"
                 name="zip"
                 type="number"
-                value={enteredZip}
-                onChange={zipChangeHandler}
-                onBlur={zipBlurHandler}
+                value={form.zipCode}
+                /* onChange={zipChangeHandler} */
               />
             </Label>
-            {zipInputHasError && (
+            {form.zipHasError && (
               <p className="text-sm font-bold text-red">
                 Wrong format or empty field
               </p>
@@ -334,6 +283,7 @@ const CreateEmployeeForm: React.FC = () => {
             <Label htmlFor="department">
               Department
               <ListSelect
+                id="departments"
                 data={departments}
                 headline="Department"
                 class="bg-white text-blue rounded font-semibold cursor-pointer relative"
@@ -342,6 +292,11 @@ const CreateEmployeeForm: React.FC = () => {
                 defaultListStyle="px-4 py-1 w-full h-8 border-solid border-[1px] border-blue hover:bg-blue hover:text-white cursor-pointer"
                 listContainerStyle="absolute w-full left-0 mt-1 z-10 rounded-lg"
               />
+              {departmentsHasError && (
+                <p className="text-sm font-bold text-red">
+                  Please choose a valid option
+                </p>
+              )}
             </Label>
           </InputValidator>
         </div>

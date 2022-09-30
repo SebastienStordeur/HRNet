@@ -21,5 +21,5 @@ Four plugins had to be converted :
 
 ## Plugin NPM
 
-[Npm Link](https://www.npmjs.com/package/list-select)
-[Npm github](https://github.com/SebastienStordeur/Hrnet-Plugin-List)
+- [Npm Link](https://www.npmjs.com/package/list-select)
+- [Npm github](https://github.com/SebastienStordeur/Hrnet-Plugin-List)
