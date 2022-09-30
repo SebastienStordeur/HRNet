@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { departments, states } from "../../../utils/datalist";
+import React, { useState, useEffect } from "react";
+import { departments, states, statesComplete } from "../../../utils/datalist";
 import useInput from "../../../Hooks/useInput";
 import Modal from "../../Modal/Modal";
 import Button from "../../UI/Button";
@@ -24,15 +24,39 @@ const isValidNumber: any = (value: string) =>
 
 const CreateEmployeeForm: React.FC = () => {
   const [startValue, setStartValue] = useState<any>(new Date());
-  const [startCalendarIsVisble, setStartCalendarIsVisible] =
+  const [startWorkValue, setStartWorkValue] = useState<string>("");
+  const [startCalendarIsVisible, setStartCalendarIsVisible] =
     useState<boolean>(false);
-  const [birthValue, setBirthValue] = useState<any>(new Date());
+  const [birthValue, setBirthValue] = useState<string>("");
+  const [birthCalendarIsVisible, setBirthCalendarIsVisible] =
+    useState<boolean>(false);
+  const stateLabel = document.querySelector(
+    "#state > label > div > div > ul > label"
+  );
+  const departmentLabel = document.querySelector(
+    "#department > label > div > div > ul > label"
+  );
+
+  const [stateValue, setStateValue] = useState<string>("");
+
+  useEffect(() => {
+    const stateValueHandler = () => {
+      const abbreviation = statesComplete.find(
+        (state) => state.name === stateLabel?.id
+      );
+
+      if (abbreviation !== undefined) {
+        setStateValue(abbreviation?.abbreviation);
+      }
+    };
+    stateValueHandler();
+  }, [stateLabel, stateValue]);
 
   const openStartCalendarHandler = () => {
-    setStartCalendarIsVisible(true);
+    setStartCalendarIsVisible((value) => !value);
   };
 
-  const formatDate = (value: any) => {
+  const formatDate = (value: string, dataType: string) => {
     const unformattedDate: string[] = value.toString().split(" ").splice(1, 3);
     const monthNumber = months.find(
       (month) => month.name === unformattedDate[0]
@@ -44,7 +68,13 @@ const CreateEmployeeForm: React.FC = () => {
 
     const formattedDate = unformattedDate.join("/");
 
-    return formattedDate;
+    if (dataType === "birth") {
+      setBirthValue(formattedDate);
+      setBirthCalendarIsVisible(false);
+    } else {
+      setStartWorkValue(formattedDate);
+      setStartCalendarIsVisible(false);
+    }
   };
 
   const {
@@ -99,7 +129,10 @@ const CreateEmployeeForm: React.FC = () => {
     enteredLastameIsValid &&
     enteredStreetIsValid &&
     enteredCityIsValid &&
-    enteredZipIsValid
+    enteredZipIsValid &&
+    birthValue !== "" &&
+    startWorkValue !== "" &&
+    stateValue !== "State"
   ) {
     formIsValid = true;
   }
@@ -109,7 +142,21 @@ const CreateEmployeeForm: React.FC = () => {
   ) => {
     event.preventDefault();
 
+    const newEmployee = {
+      firstName: enteredFirstname,
+      lastName: enteredLastname,
+      dateOfBirth: birthValue,
+      startDate: startWorkValue,
+      street: enteredStreet,
+      city: enteredCity,
+      state: stateValue,
+      zipCode: enteredZip,
+      department: departmentLabel?.id,
+    };
+
     if (!formIsValid) return;
+
+    localStorage.setItem("employee", JSON.stringify(newEmployee));
 
     setShowModal((prevValue) => !prevValue);
     resetFirstnameInput();
@@ -117,6 +164,8 @@ const CreateEmployeeForm: React.FC = () => {
     resetStreetInput();
     resetCityInput();
     resetZipInput();
+    setBirthValue("");
+    setStartWorkValue("");
   };
 
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -124,8 +173,6 @@ const CreateEmployeeForm: React.FC = () => {
   const showModalHandler: () => void = () => {
     setShowModal((prevValue) => !prevValue);
   };
-
-  const handleChange: () => void = () => {};
 
   return (
     <React.Fragment>
@@ -176,11 +223,20 @@ const CreateEmployeeForm: React.FC = () => {
               <Input
                 id="birth"
                 name="birth"
-                type="date"
-                value=""
-                onChange={handleChange}
-                onBlur={handleChange}
+                type="input"
+                value={birthValue}
+                onClick={() =>
+                  setBirthCalendarIsVisible((prevValue) => !prevValue)
+                }
               />
+              {birthCalendarIsVisible && (
+                <div className="mx-auto mt-2">
+                  <Calendar
+                    onChange={(value: any) => formatDate(value, "birth")}
+                    value={startValue}
+                  />
+                </div>
+              )}
             </Label>
           </InputValidator>
           <InputValidator>
@@ -190,14 +246,17 @@ const CreateEmployeeForm: React.FC = () => {
                 id="start"
                 name="startDate"
                 type="input"
-                value=""
-                onChange={handleChange}
-                onBlur={handleChange}
+                value={startWorkValue}
+                onClick={openStartCalendarHandler}
               />
-              <Calendar
-                onChange={(value: any) => formatDate(value)}
-                value={startValue}
-              />
+              {startCalendarIsVisible && (
+                <div className="mx-auto mt-2">
+                  <Calendar
+                    onChange={(value: any) => formatDate(value, "start")}
+                    value={startValue}
+                  />
+                </div>
+              )}
             </Label>
           </InputValidator>
         </div>
@@ -239,7 +298,7 @@ const CreateEmployeeForm: React.FC = () => {
               </p>
             )}
           </InputValidator>
-          <InputValidator>
+          <InputValidator id="state">
             <Label htmlFor="state">
               State
               <ListSelect
@@ -252,7 +311,7 @@ const CreateEmployeeForm: React.FC = () => {
               />
             </Label>
           </InputValidator>
-          <InputValidator>
+          <InputValidator id="state">
             <Label htmlFor="zip">
               Zip Code
               <Input
@@ -270,7 +329,7 @@ const CreateEmployeeForm: React.FC = () => {
               </p>
             )}
           </InputValidator>
-          <InputValidator>
+          <InputValidator id="department">
             <Label htmlFor="department">
               Department
               <ListSelect

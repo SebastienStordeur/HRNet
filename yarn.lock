@@ -5907,10 +5907,10 @@
   "resolved" "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"
   "version" "1.2.4"
 
-"list-select@^1.1.0":
-  "integrity" "sha512-0zFL2B4/41w7eyCveYOLmTMmE/Ab9Q7PSoKMxVtDZO0O7HNnN+D/g5iQeHEM3Lb9AWmSSmNhN1N+uI1gpeJ52w=="
-  "resolved" "https://registry.npmjs.org/list-select/-/list-select-1.1.0.tgz"
-  "version" "1.1.0"
+"list-select@^1.1.1":
+  "integrity" "sha512-kFLWgEbCCCqKWEi5FJbY8MGMgb/ug1XDyh8SXe255XF5EKoFeD2WuOBsoH3lq4x03KpXMXgGKd9IFtNmP+/KXg=="
+  "resolved" "https://registry.npmjs.org/list-select/-/list-select-1.1.1.tgz"
+  "version" "1.1.1"
 
 "loader-runner@^4.2.0":
   "integrity" "sha512-3R/1M+yS3j5ou80Me59j7F9IMs4PXs3VqRrm0TU3AbKPxlmpoY1TNscJV/oGJXo8qCatFGTfDbY6W6ipGOYXfg=="

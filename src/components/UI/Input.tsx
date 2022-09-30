@@ -6,8 +6,9 @@ interface IInput {
   value: string;
   name: string;
   type: string;
-  onChange: any /* () => void | ((event: React.ChangeEvent<HTMLInputElement>) => void) */;
+  onChange?: any /* () => void | ((event: React.ChangeEvent<HTMLInputElement>) => void) */;
   onBlur?: () => void;
+  onClick?: () => void;
   placeholder?: string;
 }
 
@@ -23,6 +24,7 @@ const Input: React.FC<IInput> = (props) => {
       value={props.value}
       onChange={props.onChange}
       onBlur={props.onBlur}
+      onClick={props.onClick}
       placeholder={props.placeholder}
     />
   );
