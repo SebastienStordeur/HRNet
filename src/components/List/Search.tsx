@@ -17,7 +17,7 @@ const Search: React.FC<ISearch> = (props) => {
     <Input
       id="search"
       name="search"
-      className="w-96"
+      className="w-full md:w-96"
       type="text"
       value={props.value}
       onChange={searchValueChangeHandler}

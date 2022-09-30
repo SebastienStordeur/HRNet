@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { departments, states, statesComplete } from "../../../utils/datalist";
 import useInput from "../../../Hooks/useInput";
 import Modal from "../../Modal/Modal";
@@ -10,6 +10,7 @@ import { ListSelect } from "list-select";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import { months } from "../../../utils/months";
+import EmployeeContext from "../../../store/EmployeeContext";
 
 const letterRegex: RegExp =
   /^[\w'\-,.][^0-9_!¡?÷?¿/\\+=@#$%ˆ&*(){}|~<>;:[\]]{2,}$/;
@@ -23,6 +24,8 @@ const isValidNumber: any = (value: string) =>
   numberRegex.test(value) && isNotEmpty && value.length === 5;
 
 const CreateEmployeeForm: React.FC = () => {
+  const employees = useContext(EmployeeContext);
+
   const [startValue, setStartValue] = useState<any>(new Date());
   const [startWorkValue, setStartWorkValue] = useState<string>("");
   const [startCalendarIsVisible, setStartCalendarIsVisible] =
@@ -68,13 +71,9 @@ const CreateEmployeeForm: React.FC = () => {
 
     const formattedDate = unformattedDate.join("/");
 
-    if (dataType === "birth") {
-      setBirthValue(formattedDate);
-      setBirthCalendarIsVisible(false);
-    } else {
-      setStartWorkValue(formattedDate);
-      setStartCalendarIsVisible(false);
-    }
+    dataType === "birth"
+      ? setBirthValue(formattedDate)
+      : setStartWorkValue(formattedDate);
   };
 
   const {
@@ -151,12 +150,12 @@ const CreateEmployeeForm: React.FC = () => {
       city: enteredCity,
       state: stateValue,
       zipCode: enteredZip,
-      department: departmentLabel?.id,
+      department: departmentLabel?.id ? departmentLabel.id : "",
     };
 
     if (!formIsValid) return;
 
-    localStorage.setItem("employee", JSON.stringify(newEmployee));
+    employees.employees.push(newEmployee);
 
     setShowModal((prevValue) => !prevValue);
     resetFirstnameInput();
@@ -177,7 +176,7 @@ const CreateEmployeeForm: React.FC = () => {
   return (
     <React.Fragment>
       <form
-        className="max-w-[1110px] px-8 mt-20 mx-auto grid grid-cols-2 gap-8"
+        className="max-w-[1110px] px-8 mt-20 mx-auto grid grid-cols-1 md:grid-cols-2 gap-8"
         onSubmit={submitHandler}
       >
         <div className="bg-blue w-full h-auto p-8">
@@ -228,6 +227,7 @@ const CreateEmployeeForm: React.FC = () => {
                 onClick={() =>
                   setBirthCalendarIsVisible((prevValue) => !prevValue)
                 }
+                readonly
               />
               {birthCalendarIsVisible && (
                 <div className="mx-auto mt-2">
@@ -248,6 +248,7 @@ const CreateEmployeeForm: React.FC = () => {
                 type="input"
                 value={startWorkValue}
                 onClick={openStartCalendarHandler}
+                readonly
               />
               {startCalendarIsVisible && (
                 <div className="mx-auto mt-2">
@@ -305,7 +306,7 @@ const CreateEmployeeForm: React.FC = () => {
                 data={states}
                 headline="State"
                 class="bg-white text-blue rounded font-semibold cursor-pointer relative"
-                listContainerStyle="absolute w-full left-0 mt-1 rounded-lg z-10 max-h-72 overflow-auto"
+                listContainerStyle="absolute w-full left-0 mt-1 rounded-lg z-[100] max-h-72 overflow-auto"
                 listStyle="bg-white text-blue"
                 defaultListStyle="px-4 py-1 w-full h-8 border-solid border-[1px] border-blue hover:bg-blue hover:text-white cursor-pointer"
               />
@@ -339,13 +340,15 @@ const CreateEmployeeForm: React.FC = () => {
                 listStyle="bg-white text-blue"
                 activeValueStyle="bg-blue text-white"
                 defaultListStyle="px-4 py-1 w-full h-8 border-solid border-[1px] border-blue hover:bg-blue hover:text-white cursor-pointer"
-                listContainerStyle="absolute w-full left-0 mt-1 rounded-lg"
+                listContainerStyle="absolute w-full left-0 mt-1 z-10 rounded-lg"
               />
             </Label>
           </InputValidator>
         </div>
         <div className="relative">
-          <Button type="submit">Save</Button>
+          <Button type="submit" className="w-full mb-6">
+            Save
+          </Button>
         </div>
       </form>
       {showModal && <Modal onClick={showModalHandler} />}

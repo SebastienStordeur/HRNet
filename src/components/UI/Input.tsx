@@ -10,6 +10,7 @@ interface IInput {
   onBlur?: () => void;
   onClick?: () => void;
   placeholder?: string;
+  readonly?: boolean;
 }
 
 const Input: React.FC<IInput> = (props) => {
@@ -26,6 +27,7 @@ const Input: React.FC<IInput> = (props) => {
       onBlur={props.onBlur}
       onClick={props.onClick}
       placeholder={props.placeholder}
+      readOnly={props.readonly}
     />
   );
 };

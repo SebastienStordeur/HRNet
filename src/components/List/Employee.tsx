@@ -16,7 +16,7 @@ interface IEmployee {
 
 const Employee: React.FC<IEmployee> = (props) => {
   return (
-    <tr className="odd:bg-grey even:bg-light-grey w-full grid grid-cols-9 h-10 py-1.5 text-center">
+    <tr className="odd:bg-grey even:bg-light-grey w-full grid grid-cols-9 min-h-10 py-1.5 text-center">
       <td>{props.employee.firstName}</td>
       <td>{props.employee.lastName}</td>
       <td>{props.employee.startDate}</td>

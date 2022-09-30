@@ -26,7 +26,7 @@ const Employees: React.FC = () => {
       <h2 className="uppercase font-bold text-center mt-10 text-3xl">
         Current employees
       </h2>
-      <div className="flex justify-between w-full max-w-[1110px] mx-auto mt-8">
+      <div className="px-4  flex flex-col md:flex-row md:justify-between w-full max-w-[1110px] mx-auto mt-8">
         <div>
           Show
           <Sorter setValue={setNumberPerPage} />

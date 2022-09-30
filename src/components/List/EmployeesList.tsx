@@ -91,10 +91,13 @@ const EmployeesList: React.FC<IEmployee> = (props) => {
   );
 
   return (
-    <section id="employee-list" className="max-w-[1110px] mx-auto mt-5 ">
+    <section
+      id="employee-list"
+      className="max-w-[1110px] mx-4 mt-5 lg:mx-auto overflow-auto"
+    >
       {props.employees.length > 0 ? (
         <React.Fragment>
-          <table className="w-full">
+          <table className="min-w-[1100px] overflow-auto">
             <thead>
               <tr className="grid grid-cols-9 text-white w-full bg-blue h-10 font-small text-center text-sm py-2.5 cursor-pointer">
                 <th
