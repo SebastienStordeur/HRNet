@@ -8,13 +8,13 @@ interface IModal {
 
 const Backdrop: React.FC<IModal> = (props) => {
   return (
-    <div id="backdrop" className="absolute w-full h-screen top-0 bg-grey bg-opacity-50" onClick={props.onClick}></div>
+    <div id="backdrop" className="fixed w-full h-screen top-0 bg-grey bg-opacity-50" onClick={props.onClick}></div>
   );
 };
 
 const ModalOverlay: React.FC<IModal> = (props) => {
   return (
-    <div className="flex flex-col items-center px-8 py-4 rounded-xl h-32 w-4/6 bg-white font-bold overflow-hidden absolute  left-0 right-0 top-1/3 mx-auto z-10">
+    <div className="flex flex-col items-center px-8 py-4 rounded-xl h-32 w-4/6 bg-white font-bold overflow-hidden fixed left-0 right-0 top-1/3 mx-auto z-10">
       <h3>Employee successfully created</h3>
       <Button className="mt-4" onClick={props.onClick}>
         Close modal

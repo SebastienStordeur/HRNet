@@ -12,6 +12,7 @@ interface IDateField {
   onClick: () => void;
   isVisible: boolean;
   format: (value: string, dataType: string) => void;
+  hasError: boolean;
 }
 
 const DateField: React.FC<IDateField> = (props) => {
@@ -27,6 +28,7 @@ const DateField: React.FC<IDateField> = (props) => {
           </div>
         )}
       </Label>
+      {props.hasError && <p className="text-sm font-bold text-red">Can't be empty</p>}
     </InputValidator>
   );
 };
