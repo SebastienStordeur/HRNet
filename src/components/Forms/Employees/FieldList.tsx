@@ -9,11 +9,12 @@ interface ListField {
   id: string;
   hasError: boolean;
   data: string[];
+  nameId: string;
 }
 
 const FieldList: React.FC<ListField> = (props) => {
   return (
-    <InputValidator id="department">
+    <InputValidator id={props.nameId}>
       <Label htmlFor={props.id}>
         {props.label}
         <ListSelect

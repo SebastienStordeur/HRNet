@@ -1,19 +1,19 @@
-import React, { forwardRef } from "react";
+import React from "react";
 
 interface IInput {
   id: string;
   className?: string;
   value?: string;
-  name: string;
+  name?: string;
   type: string;
-  onChange?: any /* () => void | ((event: React.ChangeEvent<HTMLInputElement>) => void) */;
+  onChange?: (() => void) | ((event: React.ChangeEvent<HTMLInputElement>) => void);
   onBlur?: () => void;
   onClick?: () => void;
   placeholder?: string;
   readonly?: boolean;
 }
 
-const Input: React.FC<IInput> = forwardRef((props, ref) => {
+const Input: React.FC<IInput> = (props) => {
   return (
     <input
       id={props.id}
@@ -30,6 +30,6 @@ const Input: React.FC<IInput> = forwardRef((props, ref) => {
       readOnly={props.readonly}
     />
   );
-});
+};
 
-export default Input;
+export default React.memo(Input);

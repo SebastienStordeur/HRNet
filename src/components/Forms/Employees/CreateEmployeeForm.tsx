@@ -4,19 +4,14 @@ import useInput from "../../../Hooks/useInput";
 import EmployeeContext from "../../../store/EmployeeContext";
 import Modal from "../../Modal/Modal";
 import Button from "../../UI/Button";
-import Input from "../../UI/Input";
-import InputValidator from "../Inputvalidator/InputValidator";
-import Label from "./Label";
-import { ListSelect } from "list-select";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 import { isValidText, isValidNumber } from "../../../utils/formValidations";
 import { months } from "../../../utils/months";
 import FieldList from "./FieldList";
+import InputField from "./InputField";
+import DateField from "./DateField";
 
 const CreateEmployeeForm: React.FC = () => {
   const employees = useContext(EmployeeContext);
-  const startValue = new Date();
 
   const [startWorkValue, setStartWorkValue] = useState<string>("");
   const [startCalendarIsVisible, setStartCalendarIsVisible] = useState<boolean>(false);
@@ -33,8 +28,11 @@ const CreateEmployeeForm: React.FC = () => {
     setShowModal((prevValue) => !prevValue);
   };
 
-  const openStartCalendarHandler = () => {
+  const openStartCalendarHandler: () => void = () => {
     setStartCalendarIsVisible((value) => !value);
+  };
+  const openBirthCalendarHandler: () => void = () => {
+    setBirthCalendarIsVisible((value) => !value);
   };
 
   const formatDate = (value: string, dataType: string) => {
@@ -115,7 +113,8 @@ const CreateEmployeeForm: React.FC = () => {
       enteredZipIsValid &&
       birthValue !== "" &&
       startWorkValue !== "" &&
-      !stateHasError
+      !stateHasError &&
+      !departmentHasError
     ) {
       formIsValid = true;
     }
@@ -153,117 +152,73 @@ const CreateEmployeeForm: React.FC = () => {
         onSubmit={submitHandler}
       >
         <div className="bg-blue w-full h-auto p-8">
-          <InputValidator>
-            <Label htmlFor="firstName">
-              FirstName
-              <Input
-                id="firstName"
-                name="firstName"
-                type="text"
-                value={enteredFirstname}
-                onChange={firstnameChangeHandler}
-                onBlur={firstnameBlurHandler}
-              />
-            </Label>
-            {firstnameInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
-          </InputValidator>
-          <InputValidator>
-            <Label htmlFor="name">
-              Last Name
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                value={enteredLastname}
-                onChange={lastnameChangeHandler}
-                onBlur={lastnameBlurHandler}
-              />
-            </Label>
-            {lastnameInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
-          </InputValidator>
-          <InputValidator>
-            <Label htmlFor="birth">
-              Date of birth
-              <Input
-                id="birth"
-                name="birth"
-                type="input"
-                value={birthValue}
-                onClick={() => setBirthCalendarIsVisible((prevValue) => !prevValue)}
-                readonly
-              />
-              {birthCalendarIsVisible && (
-                <div className="mx-auto mt-2">
-                  <Calendar onChange={(value: any) => formatDate(value, "birth")} value={startValue} />
-                </div>
-              )}
-            </Label>
-          </InputValidator>
-          <InputValidator>
-            <Label htmlFor="startDate">
-              Start Date
-              <Input
-                id="start"
-                name="startDate"
-                type="input"
-                value={startWorkValue}
-                onClick={openStartCalendarHandler}
-                readonly
-              />
-              {startCalendarIsVisible && (
-                <div className="mx-auto mt-2">
-                  <Calendar onChange={(value: any) => formatDate(value, "start")} value={startValue} />
-                </div>
-              )}
-            </Label>
-          </InputValidator>
+          <InputField
+            label="FirstName"
+            id="firstname"
+            value={enteredFirstname}
+            onChange={firstnameChangeHandler}
+            onBlur={firstnameBlurHandler}
+            hasError={firstnameInputHasError}
+            type="text"
+          />
+          <InputField
+            label="LastName"
+            id="lastName"
+            value={enteredLastname}
+            onChange={lastnameChangeHandler}
+            onBlur={lastnameBlurHandler}
+            hasError={lastnameInputHasError}
+            type="text"
+          />
+          <DateField
+            id="birth"
+            readonly
+            value={birthValue}
+            onClick={openBirthCalendarHandler}
+            isVisible={birthCalendarIsVisible}
+            format={formatDate}
+          />
+          <DateField
+            id="start"
+            readonly
+            value={startWorkValue}
+            onClick={openStartCalendarHandler}
+            isVisible={startCalendarIsVisible}
+            format={formatDate}
+          />
         </div>
         <div className="bg-blue w-full h-auto p-8">
           <h2 className="text-white font-bold uppercase text-2xl">Address</h2>
-          <InputValidator>
-            <Label htmlFor="street">
-              Street
-              <Input
-                id="street"
-                name="street"
-                type="text"
-                value={enteredStreet}
-                onChange={streetChangeHandler}
-                onBlur={streetBlurHandler}
-              />
-            </Label>
-            {streetInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
-          </InputValidator>
-          <InputValidator>
-            <Label htmlFor="city">
-              City
-              <Input
-                id="city"
-                name="city"
-                type="text"
-                value={enteredCity}
-                onChange={cityChangeHandler}
-                onBlur={cityBlurHandler}
-              />
-            </Label>
-            {cityInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
-          </InputValidator>
-          <FieldList label="State" id="states" inputId="state" hasError={stateHasError} data={states} />
-          <InputValidator id="state">
-            <Label htmlFor="zip">
-              Zip Code
-              <Input
-                id="zipCode"
-                name="zip"
-                type="number"
-                value={enteredZip}
-                onChange={zipChangeHandler}
-                onBlur={zipBlurHandler}
-              />
-            </Label>
-            {zipInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
-          </InputValidator>
+          <InputField
+            label="Street"
+            id="street"
+            value={enteredStreet}
+            onChange={streetChangeHandler}
+            onBlur={streetBlurHandler}
+            hasError={streetInputHasError}
+            type="text"
+          />
+          <InputField
+            label="City"
+            id="city"
+            value={enteredCity}
+            onChange={cityChangeHandler}
+            onBlur={cityBlurHandler}
+            hasError={cityInputHasError}
+            type="text"
+          />
+          <FieldList nameId="state" label="State" id="states" inputId="state" hasError={stateHasError} data={states} />
+          <InputField
+            label="Zip Code"
+            id="zipCode"
+            value={enteredZip}
+            onChange={zipChangeHandler}
+            onBlur={zipBlurHandler}
+            hasError={zipInputHasError}
+            type="number"
+          />
           <FieldList
+            nameId="department"
             label="Department"
             id="departments"
             inputId="department"
