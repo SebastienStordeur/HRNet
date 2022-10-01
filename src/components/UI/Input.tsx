@@ -1,9 +1,9 @@
-import React from "react";
+import React, { forwardRef } from "react";
 
 interface IInput {
   id: string;
   className?: string;
-  value: string;
+  value?: string;
   name: string;
   type: string;
   onChange?: any /* () => void | ((event: React.ChangeEvent<HTMLInputElement>) => void) */;
@@ -13,7 +13,7 @@ interface IInput {
   readonly?: boolean;
 }
 
-const Input: React.FC<IInput> = (props) => {
+const Input: React.FC<IInput> = forwardRef((props, ref) => {
   return (
     <input
       id={props.id}
@@ -30,6 +30,6 @@ const Input: React.FC<IInput> = (props) => {
       readOnly={props.readonly}
     />
   );
-};
+});
 
 export default Input;

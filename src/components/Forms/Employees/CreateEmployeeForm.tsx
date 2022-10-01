@@ -1,5 +1,7 @@
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useContext } from "react";
 import { departments, states, statesComplete } from "../../../utils/datalist";
+import useInput from "../../../Hooks/useInput";
+import EmployeeContext from "../../../store/EmployeeContext";
 import Modal from "../../Modal/Modal";
 import Button from "../../UI/Button";
 import Input from "../../UI/Input";
@@ -8,120 +10,140 @@ import Label from "./Label";
 import { ListSelect } from "list-select";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
+import { isValidText, isValidNumber } from "../../../utils/formValidations";
 import { months } from "../../../utils/months";
-import EmployeeContext from "../../../store/EmployeeContext";
+import FieldList from "./FieldList";
 
 const CreateEmployeeForm: React.FC = () => {
   const employees = useContext(EmployeeContext);
-
-  const firstnameRef = useRef<HTMLInputElement>();
-  const lastnameRef = useRef<HTMLInputElement>();
-  const streetRef = useRef<HTMLInputElement>();
-  const cityRef = useRef<HTMLInputElement>();
-  const zipRef = useRef<HTMLInputElement>();
-
-  const [form, setForm] = useState<any>({
-    firstName: "",
-    firstNameHasError: false,
-    lastName: "",
-    lastNameHasError: false,
-    street: "",
-    streetHasError: false,
-    city: "",
-    cityHasError: false,
-    zipCode: "",
-    zipHasError: false,
-  });
-
   const startValue = new Date();
+
   const [startWorkValue, setStartWorkValue] = useState<string>("");
-  const [startCalendarIsVisible, setStartCalendarIsVisible] =
-    useState<boolean>(false);
+  const [startCalendarIsVisible, setStartCalendarIsVisible] = useState<boolean>(false);
   const [birthValue, setBirthValue] = useState<string>("");
-  const [birthCalendarIsVisible, setBirthCalendarIsVisible] =
-    useState<boolean>(false);
+  const [birthCalendarIsVisible, setBirthCalendarIsVisible] = useState<boolean>(false);
+  const stateLabel = document.querySelector("#state > label > div > div > ul > label");
+  const departmentLabel = document.querySelector("#department > label > div > div > ul > label");
 
-  const [departmentsHasError, setDepartmentsHasError] =
-    useState<boolean>(false);
-  const [statesHasError, setStatesHasError] = useState<boolean>(false);
+  const [departmentHasError, setDepartmentHasError] = useState<boolean>(false);
+  const [stateHasError, setStateHasError] = useState<boolean>(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
-  const stateLabel = document.querySelector(
-    "#state > label > div > div > ul > label"
-  );
-  const departmentLabel = document.querySelector(
-    "#department > label > div > div > ul > label"
-  );
-
-  const openStartCalendarHandler = () => {
-    setStartCalendarIsVisible((value: boolean) => !value);
+  const showModalHandler: () => void = () => {
+    setShowModal((prevValue) => !prevValue);
   };
 
-  const openBirthCalendarHandler = () => {
-    setBirthCalendarIsVisible((value: boolean) => !value);
+  const openStartCalendarHandler = () => {
+    setStartCalendarIsVisible((value) => !value);
   };
 
   const formatDate = (value: string, dataType: string) => {
     const unformattedDate: string[] = value.toString().split(" ").splice(1, 3);
-    const monthNumber = months.find(
-      (month) => month.name === unformattedDate[0]
-    );
+    const monthNumber = months.find((month) => month.name === unformattedDate[0]);
+
     if (monthNumber) {
       unformattedDate[0] = monthNumber?.number;
     }
+
     const formattedDate = unformattedDate.join("/");
-    dataType === "birth"
-      ? setBirthValue(formattedDate)
-      : setStartWorkValue(formattedDate);
+
+    dataType === "birth" ? setBirthValue(formattedDate) : setStartWorkValue(formattedDate);
   };
 
-  let formIsValid: boolean = false;
+  const {
+    value: enteredFirstname,
+    isValid: enteredFirstnameIsValid,
+    hasError: firstnameInputHasError,
+    valueChangeHandler: firstnameChangeHandler,
+    inputBlurHandler: firstnameBlurHandler,
+    reset: resetFirstnameInput,
+  } = useInput(isValidText);
 
-  if (birthValue !== "" && startWorkValue !== "") {
-    formIsValid = true;
-  }
+  const {
+    value: enteredLastname,
+    isValid: enteredLastameIsValid,
+    hasError: lastnameInputHasError,
+    valueChangeHandler: lastnameChangeHandler,
+    inputBlurHandler: lastnameBlurHandler,
+    reset: resetLastnameInput,
+  } = useInput(isValidText);
+
+  const {
+    value: enteredStreet,
+    isValid: enteredStreetIsValid,
+    hasError: streetInputHasError,
+    valueChangeHandler: streetChangeHandler,
+    inputBlurHandler: streetBlurHandler,
+    reset: resetStreetInput,
+  } = useInput(isValidText);
+
+  const {
+    value: enteredCity,
+    isValid: enteredCityIsValid,
+    hasError: cityInputHasError,
+    valueChangeHandler: cityChangeHandler,
+    inputBlurHandler: cityBlurHandler,
+    reset: resetCityInput,
+  } = useInput(isValidText);
+
+  const {
+    value: enteredZip,
+    isValid: enteredZipIsValid,
+    hasError: zipInputHasError,
+    valueChangeHandler: zipChangeHandler,
+    inputBlurHandler: zipBlurHandler,
+    reset: resetZipInput,
+  } = useInput(isValidNumber);
+
+  let formIsValid: boolean = false;
 
   const submitHandler: (event: React.FormEvent<HTMLFormElement>) => void = (
     event: React.FormEvent<HTMLFormElement>
   ) => {
     event.preventDefault();
 
-    const abbreviation = statesComplete.find(
-      (state) => state.name === stateLabel?.id
-    );
+    const abbreviation = statesComplete.find((state) => state.name === stateLabel?.id);
+
+    !abbreviation ? setStateHasError(true) : setStateHasError(false);
+    departmentLabel?.id === "departments" ? setDepartmentHasError(true) : setDepartmentHasError(false);
+
+    if (
+      enteredFirstnameIsValid &&
+      enteredLastameIsValid &&
+      enteredStreetIsValid &&
+      enteredCityIsValid &&
+      enteredZipIsValid &&
+      birthValue !== "" &&
+      startWorkValue !== "" &&
+      !stateHasError
+    ) {
+      formIsValid = true;
+    }
 
     const newEmployee = {
-      firstName: form.firstName,
-      lastName: form.lastName,
+      firstName: enteredFirstname,
+      lastName: enteredLastname,
       dateOfBirth: birthValue,
       startDate: startWorkValue,
-      street: form.street,
-      city: form.city,
+      street: enteredStreet,
+      city: enteredCity,
       state: abbreviation ? abbreviation?.abbreviation : "",
-      zipCode: form.zipCode,
+      zipCode: enteredZip,
       department: departmentLabel?.id ? departmentLabel.id : "",
     };
 
-    newEmployee.department === "departments"
-      ? setDepartmentsHasError(true)
-      : setDepartmentsHasError(false);
-
-    newEmployee.state === "states"
-      ? setStatesHasError(true)
-      : setStatesHasError(false);
-
-    if (!formIsValid && departmentsHasError) return;
+    if (!formIsValid) return;
 
     employees.addEmployee(newEmployee);
 
     setShowModal((prevValue) => !prevValue);
+    resetFirstnameInput();
+    resetLastnameInput();
+    resetStreetInput();
+    resetCityInput();
+    resetZipInput();
     setBirthValue("");
     setStartWorkValue("");
-  };
-
-  const [showModal, setShowModal] = useState<boolean>(false);
-
-  const showModalHandler: () => void = () => {
-    setShowModal((prevValue) => !prevValue);
   };
 
   return (
@@ -138,14 +160,12 @@ const CreateEmployeeForm: React.FC = () => {
                 id="firstName"
                 name="firstName"
                 type="text"
-                value={form.firstName}
+                value={enteredFirstname}
+                onChange={firstnameChangeHandler}
+                onBlur={firstnameBlurHandler}
               />
             </Label>
-            {form.firstNameHasError && (
-              <p className="text-sm font-bold text-red">
-                Wrong format or empty field
-              </p>
-            )}
+            {firstnameInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="name">
@@ -154,15 +174,12 @@ const CreateEmployeeForm: React.FC = () => {
                 id="name"
                 name="name"
                 type="text"
-                value={form.lastName}
-                /* onChange={lastnameChangeHandler} */
+                value={enteredLastname}
+                onChange={lastnameChangeHandler}
+                onBlur={lastnameBlurHandler}
               />
             </Label>
-            {form.lastNameHasError && (
-              <p className="text-sm font-bold text-red">
-                Wrong format or empty field
-              </p>
-            )}
+            {lastnameInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="birth">
@@ -172,15 +189,12 @@ const CreateEmployeeForm: React.FC = () => {
                 name="birth"
                 type="input"
                 value={birthValue}
-                onClick={openBirthCalendarHandler}
+                onClick={() => setBirthCalendarIsVisible((prevValue) => !prevValue)}
                 readonly
               />
               {birthCalendarIsVisible && (
                 <div className="mx-auto mt-2">
-                  <Calendar
-                    onChange={(value: any) => formatDate(value, "birth")}
-                    value={startValue}
-                  />
+                  <Calendar onChange={(value: any) => formatDate(value, "birth")} value={startValue} />
                 </div>
               )}
             </Label>
@@ -198,10 +212,7 @@ const CreateEmployeeForm: React.FC = () => {
               />
               {startCalendarIsVisible && (
                 <div className="mx-auto mt-2">
-                  <Calendar
-                    onChange={(value: any) => formatDate(value, "start")}
-                    value={startValue}
-                  />
+                  <Calendar onChange={(value: any) => formatDate(value, "start")} value={startValue} />
                 </div>
               )}
             </Label>
@@ -216,15 +227,12 @@ const CreateEmployeeForm: React.FC = () => {
                 id="street"
                 name="street"
                 type="text"
-                value={form.street}
-                /* onChange={streetChangeHandler} */
+                value={enteredStreet}
+                onChange={streetChangeHandler}
+                onBlur={streetBlurHandler}
               />
             </Label>
-            {form.streetHasError && (
-              <p className="text-sm font-bold text-red">
-                Wrong format or empty field
-              </p>
-            )}
+            {streetInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
           </InputValidator>
           <InputValidator>
             <Label htmlFor="city">
@@ -233,75 +241,38 @@ const CreateEmployeeForm: React.FC = () => {
                 id="city"
                 name="city"
                 type="text"
-                value={form.city}
-                /* onChange={cityChangeHandler} */
+                value={enteredCity}
+                onChange={cityChangeHandler}
+                onBlur={cityBlurHandler}
               />
             </Label>
-            {form.cityHasError && (
-              <p className="text-sm font-bold text-red">
-                Wrong format or empty field
-              </p>
-            )}
+            {cityInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
           </InputValidator>
-          <InputValidator id="state">
-            <Label htmlFor="state">
-              State
-              <ListSelect
-                id="states"
-                data={states}
-                headline="State"
-                class="bg-white text-blue rounded font-semibold cursor-pointer relative"
-                listContainerStyle="absolute w-full left-0 mt-1 rounded-lg z-[100] max-h-72 overflow-auto"
-                listStyle="bg-white text-blue"
-                defaultListStyle="px-4 py-1 w-full h-8 z-[100] border-solid border-[1px] bg-blue text-white border-blue hover:bg-blue hover:text-white cursor-pointer"
-              />
-              {statesHasError && (
-                <p className="text-sm font-bold text-red">
-                  Please choose a valid option
-                </p>
-              )}
-            </Label>
-          </InputValidator>
+          <FieldList label="State" id="states" inputId="state" hasError={stateHasError} data={states} />
           <InputValidator id="state">
             <Label htmlFor="zip">
               Zip Code
               <Input
-                id="zip"
+                id="zipCode"
                 name="zip"
                 type="number"
-                value={form.zipCode}
-                /* onChange={zipChangeHandler} */
+                value={enteredZip}
+                onChange={zipChangeHandler}
+                onBlur={zipBlurHandler}
               />
             </Label>
-            {form.zipHasError && (
-              <p className="text-sm font-bold text-red">
-                Wrong format or empty field
-              </p>
-            )}
+            {zipInputHasError && <p className="text-sm font-bold text-red">Wrong format or empty field</p>}
           </InputValidator>
-          <InputValidator id="department">
-            <Label htmlFor="department">
-              Department
-              <ListSelect
-                id="departments"
-                data={departments}
-                headline="Department"
-                class="bg-white text-blue rounded font-semibold cursor-pointer relative"
-                listStyle="bg-white text-blue"
-                activeValueStyle="bg-blue text-white"
-                defaultListStyle="px-4 py-1 w-full h-8 border-solid border-[1px] border-blue hover:bg-blue hover:text-white cursor-pointer"
-                listContainerStyle="absolute w-full left-0 mt-1 z-10 rounded-lg"
-              />
-              {departmentsHasError && (
-                <p className="text-sm font-bold text-red">
-                  Please choose a valid option
-                </p>
-              )}
-            </Label>
-          </InputValidator>
+          <FieldList
+            label="Department"
+            id="departments"
+            inputId="department"
+            hasError={departmentHasError}
+            data={departments}
+          />
         </div>
         <div className="relative">
-          <Button type="submit" className="w-full mb-6">
+          <Button type="submit" className="uppercase tracking-widest w-full mb-6">
             Save
           </Button>
         </div>
