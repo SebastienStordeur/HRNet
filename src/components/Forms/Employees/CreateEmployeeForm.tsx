@@ -43,18 +43,18 @@ const CreateEmployeeForm: React.FC = () => {
     setBirthCalendarIsVisible((value) => !value);
   };
 
-  const formatDate = (value: string, dataType: string) => {
+  const formatDate: (value: string, dataType: string) => void = (value: string, dataType: string) => {
     const unformattedDate: string[] = value.toString().split(" ").splice(1, 3);
     const monthNumber = months.find((month) => month.name === unformattedDate[0]);
     if (monthNumber) {
       unformattedDate[0] = monthNumber?.number;
     }
-    const formattedDate = unformattedDate.join("/");
+    const formattedDate: string = unformattedDate.join("/");
     dataType === "birth" ? setBirthValue(formattedDate) : setStartWorkValue(formattedDate);
   };
 
   const abbreviation = statesComplete.find((state) => state.name === stateLabel?.id);
-  const validateForm = () => {
+  const validateForm: () => void = () => {
     !abbreviation ? setStateHasError(true) : setStateHasError(false);
     departmentLabel?.id === "departments" ? setDepartmentHasError(true) : setDepartmentHasError(false);
     isValidText(enteredFirstname) ? setFirstnameHasError(false) : setFirstnameHasError(true);
