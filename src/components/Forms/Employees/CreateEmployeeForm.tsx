@@ -125,12 +125,12 @@ const CreateEmployeeForm: React.FC = () => {
     }
 
     const newEmployee = {
-      firstName: enteredFirstname,
-      lastName: enteredLastname,
+      firstName: enteredFirstname.charAt(0).toUpperCase() + enteredFirstname.slice(1),
+      lastName: enteredLastname.charAt(0).toUpperCase() + enteredLastname.slice(1),
       dateOfBirth: birthValue,
       startDate: startWorkValue,
-      street: enteredStreet,
-      city: enteredCity,
+      street: enteredStreet.charAt(0).toUpperCase() + enteredStreet.slice(1),
+      city: enteredCity.charAt(0).toUpperCase() + enteredCity.slice(1),
       state: abbreviation ? abbreviation?.abbreviation : "",
       zipCode: enteredZip,
       department: departmentLabel?.id ? departmentLabel.id : "",
