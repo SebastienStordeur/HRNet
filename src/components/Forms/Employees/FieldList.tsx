@@ -25,7 +25,7 @@ const FieldList: React.FC<ListField> = (props) => {
           listStyle="bg-white text-blue"
           activeValueStyle="bg-blue text-white"
           defaultListStyle="px-4 py-1 w-full h-8 border-solid border-[1px] border-blue hover:bg-blue hover:text-white cursor-pointer"
-          listContainerStyle="absolute w-full left-0 mt-1 z-10 rounded-lg"
+          listContainerStyle="absolute w-full left-0 mt-1 z-10 rounded-lg max-h-72 overflow-auto"
         />
       </Label>
       {props.hasError && <p className="text-sm font-bold text-red">Please choose an option</p>}
